@@ -4,14 +4,13 @@
     <div class="hero-content">
       <form id="Radionica" @submit.prevent="submitForm">
         <h2> Osnovne informacije o prijavi: </h2>
-        Naziv vaše prijave: <input type="text" placeholder="Unesite naziv..." /><br />
-        Dodatne informacije o prijavi: <input type="text" placeholder="Unesite opis..." /><br />
-        Ime i prezime voditelja: <input type="text" placeholder="Unesite voditelja..." /><br />
-        Datum početka: <input class="date" type="date" /><br />
-        Datum završetka: <input class="date" type="date" /><br />
-        Rok za prijave: <input class="date" type="datetime-local" />
-        <h2> Lista pitanja za prijavu: </h2>
-        <div class="pitanje">
+        <p id="NazivPrijave">Naziv vaše prijave: <input type="text" placeholder="Unesite naziv..." /></p>
+        <p id="DodatneInfo">Dodatne informacije o prijavi: <input type="text" placeholder="Unesite opis..." /></p>
+        <p id="Voditelj">Ime i prezime voditelja: <input type="text" placeholder="Unesite voditelja..." /></p>
+        <p id="Pocetak">Datum početka: <input class="date" type="date" id="DatPoc"/></p>
+        <p id="Zavrsetak">Datum završetka: <input class="date" type="date" id="DatKraj"/></p>
+        <p id="RokPrijava">Rok za prijave: <input class="date" type="datetime-local" id="DatPrij"/></p>
+        <h2 id="NaslovListe"> Lista pitanja za prijavu: </h2>
           <div class="flex-div">
             <input type='text' class='dugiteksti' placeholder='Unesite naziv pitanja...' />
             <select class='VrstePitanja' @change='promjenaVrste'>
@@ -21,10 +20,9 @@
             </select>
             <button class="Closer" @click="Destroying">X</button>
           </div>
-        </div>
-        <div class="btn-div">
+        <div class="btn-div" id="buttoni">
           <button class="Buttoni" @click="NoviDiv">Dodaj još jedno pitanje</button>
-          <button class="Buttoni" @click='submitaj'>Napravi prijavu</button>
+          <button class="Buttoni" @click='Submitting'>Napravi prijavu</button>
         </div>
       </form>
     </div>
@@ -32,9 +30,54 @@
 </template>
 
 <script>
-export default {
-  methods: {
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
+export default {
+  data() {
+    return {
+      Radionice: 0,
+      ErrorCode: "Niste unijeli sve podatke!",
+      User: [],
+    };
+  },
+  mounted(){
+    this.generirajHeader();
+  },
+  methods: {
+    async generirajHeader(){
+        try{
+          let{data} = await axios.get("http://localhost:8000/api/user");
+          this.napraviHeader(data);
+          this.user = data;
+        }
+        catch(error){
+          if(error.response.status == 401){
+            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/login' class='navbar-item' data-v-a81738bd>Login</a>";
+            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/login' class='mobile-nav-item' data-v-a81738bd>Login</a>";
+          }
+        }
+      },
+    async napraviHeader(data){
+        switch(data.vrstaKorisnika){
+          case 1:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/korisnici' class='navbar-item' data-v-a81738bd>Korisnici</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/korisnici' class='mobile-nav-item' data-v-a81738bd>Korisnici</a>";
+          case 2:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/create' class='navbar-item' data-v-a81738bd>Kreiraj</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/create' class='mobile-nav-item' data-v-a81738bd>Kreiraj</a>";
+          case 3:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
+
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
+
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
+          
+        }
+      },
 
 
     promjenaVrste(event) {
@@ -118,13 +161,104 @@ export default {
 
     Destroying(event) {
       event.target.parentNode.parentNode.removeChild(event.target.parentNode);
-      if (document.getElementById("Radionica").lastElementChild.previousSibling.innerHTML == "") this.NoviDiv();
+      console.log(document.getElementById("Radionica").lastElementChild.previousSibling);
+      if (document.getElementById("Radionica").lastElementChild.previousSibling.id == "NaslovListe") this.NoviDiv();
     },
 
-    submitaj(event) {
-      document.getElementById("Radionica").submit();
+    async Submitting(event) {
+      if(confirm("Jeste li sigurni da ste dobro unijeli podatke?")){
+      if(this.provjeraUnosa()){
+      try {
+          await axios.post('http://localhost:8000/Radionica',{
+            "NazivRadionice": document.getElementById("NazivPrijave").childNodes[1].value,
+            "OpisRadionice": document.getElementById("DodatneInfo").childNodes[1].value,
+            "VoditeljRadionice": document.getElementById("Voditelj").childNodes[1].value,
+            "DatumPocetka": document.getElementById("Pocetak").childNodes[1].value,
+            "DatumZavrsetka": document.getElementById("Zavrsetak").childNodes[1].value,
+            "PrijaveDo": document.getElementById("RokPrijava").childNodes[1].value,
+            "IdKreatora": this.user.id,
+          }).then(res =>{
+            //console.log(res);
+          })
+        } catch (error) {
+          this.error = error.response ? error.response.data : error.message
+        }
+        await axios.get("http://localhost:8000/Radionica").then(response =>{
+          this.Radionice = response.data[response.data.length - 1].id;
+        })
+        let i = 1;
+        while(i == 1){
+          i = this.unesiPitanje(document.getElementById("NaslovListe").nextSibling);
+        }
+        alert("Prijava je uspješno napravljena!");
+        await navigateTo('/');
     }
-  }
+    else(alert(this.ErrorCode));}
+  },
+
+    provjeraUnosa(){
+      let i = 1;
+      let Unosi = Array.from(document.getElementsByTagName('input')).slice(1);
+      Unosi.forEach((polje)=>{
+        if(polje.value == ""){i = 0;
+          this.ErrorCode = "Niste unijeli sve podatke!"
+        }
+      });
+      if(document.getElementById("DatPoc").value > document.getElementById("DatKraj").value){
+        console.log(document.getElementById("DatPoc").value +">"+document.getElementById("DatKraj").value);
+        this.ErrorCode = "Datum završetka ne smije biti prije datuma početka!"
+        return 0;
+      }
+      if(document.getElementById("DatPrij").value > document.getElementById("DatKraj").value){
+        console.log(document.getElementById("DatPrij").value +">"+document.getElementById("DatKraj").value);
+        this.ErrorCode = "Krajnji rok za prijavu ne smije biti nakon datuma završetka prijave!"
+        return 0;
+      }
+
+      return i;
+    },
+
+    unesiPitanje(obj){
+      if(obj.id == "buttoni") return 0;
+      else{
+        if(obj.childNodes[1].value == "KratkiOdgovor"){
+          axios.post('http://localhost:8000/pitanjaRadionice', {
+            "VrstaPodatka": "KratkiOdgovor",
+            "radionice": this.Radionice,
+            "NazivPitanja": obj.childNodes[0].value,
+            "OpcijePitanja": "KratkiOdgovor",
+          })
+        }
+        else if(obj.childNodes[1].value == "ViseTocnih"){
+          let opcije = "";
+          opcije += obj.childNodes[3].childNodes[1].value;
+          Array.from(obj.childNodes).slice(4).forEach((dijete) => {
+            opcije += (";" + dijete.childNodes[1].value);
+          });
+          axios.post('http://localhost:8000/pitanjaRadionice', {
+            "VrstaPodatka": "ViseTocnih",
+            "radionice": this.Radionice,
+            "NazivPitanja": obj.childNodes[0].value,
+            "OpcijePitanja": opcije,
+          })
+        }
+        else if(obj.childNodes[1].value == "JedanOd"){
+          let opcije = "";
+          opcije += obj.childNodes[3].childNodes[1].value;
+          Array.from(obj.childNodes).slice(4).forEach((dijete) => {
+            opcije += (";" + dijete.childNodes[1].value);
+          });
+          axios.post('http://localhost:8000/pitanjaRadionice', {
+            "VrstaPodatka": "JedanOd",
+            "radionice": this.Radionice,
+            "NazivPitanja": obj.childNodes[0].value,
+            "OpcijePitanja": opcije,
+          })
+        }
+      }
+      return this.unesiPitanje(obj.nextSibling);
+    }
+}
 }
 </script>
 

@@ -7,7 +7,7 @@
     </NuxtLink>
     <p>Login</p>
     <div class="login-container">
-      <form class="login-form">
+      <form class="login-form" @submit.prevent="onLogin">
         <div class="input-group">
           <input type="email" id="email" name="email" placeholder="Enter your email" required>
           <div class="label-div">
@@ -22,8 +22,7 @@
         </div>
         <div class="submit-div">
           <div class="checkbox-container">
-            <input type="checkbox" id="stay-signed-in" name="stay-signed-in">
-            <label for="stay-signed-in" class="checkbox-label">Stay signed in</label>
+            <NuxtLink to="/register" id="registriranje">Nemate račun?</NuxtLink>
           </div>
           <button type="submit" class="login-button">
             <ArrowRightIcon class="icon-arrow" />
@@ -39,7 +38,34 @@
 import MailIcon from '~/assets/icons/mail.svg'
 import PasswordIcon from '~/assets/icons/password.svg'
 import ArrowRightIcon from '~/assets/icons/arrow-right.svg'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true;
+
+async function onLogin(){
+  await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+    try {
+      await axios.post("http://localhost:8000/login", {
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+    }).then(res => {
+      navigateTo('/');
+    });
+    //let {data} = await axios.get("http://localhost:8000/api/user");
+  }catch(error){
+    console.log(error);
+    if(error.response.status == 422)alert("Niste dobro unijeli podatke!");
+    else if(error.response.status == 404){
+      alert("Već ste ulogirani!");
+      navigateTo('/');
+    }
+    document.getElementById("password").value = "";
+  }
+  
+}
+
 </script>
+
 
 <style scoped>
 html,
@@ -53,6 +79,10 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+#registriranje{
+  color:white;
 }
 
 .container {

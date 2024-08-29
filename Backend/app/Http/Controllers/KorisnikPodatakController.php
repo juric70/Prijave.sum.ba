@@ -41,8 +41,7 @@ class KorisnikPodatakController extends Controller
 
         try{
            $validator = Validator::make( $request->all(),[
-                'IdPrijave' => 'required|exists:_listaprijava,id',
-                'Redoslijed' => 'required|integer',
+                'IdPrijave' => 'required|exists:listaprijava,id',
                 'Odgovor' => 'required|string',
             ]);
             if($validator->fails()) {
@@ -52,7 +51,6 @@ class KorisnikPodatakController extends Controller
 
             $podaci = korisnikPodatak::create([
                 'IdPrijave' => $request->IdPrijave,
-                'Redoslijed' => $request->Redoslijed,
                 'Odgovor' => $request->Odgovor
             ]);
 

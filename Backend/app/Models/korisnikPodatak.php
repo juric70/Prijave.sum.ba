@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class korisnikPodatak extends Model
 {
+    protected $table = 'korisnikpodatak';
     use HasFactory;
 
     protected $fillable = [
         'Odgovor',
-        'Redoslijed',
         'IdPrijave'
     ];
 

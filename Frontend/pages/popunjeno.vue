@@ -4,11 +4,6 @@
 <template>
     <div>
         <Header></Header>
-        <Slider></Slider>
-        <Footer></Footer>
+        <FormaP></FormaP>
     </div>
 </template>
-
-
-<script setup>
-</script>

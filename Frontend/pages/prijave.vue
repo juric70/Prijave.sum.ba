@@ -4,11 +4,6 @@
 <template>
     <div>
         <Header></Header>
-        <Slider></Slider>
-        <Footer></Footer>
+        <Radionice></Radionice>
     </div>
 </template>
-
-
-<script setup>
-</script>

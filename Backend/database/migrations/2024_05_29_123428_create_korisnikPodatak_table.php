@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_korisnik_podatak', function (Blueprint $table) {
+        Schema::create('korisnikPodatak', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('Odgovor');
-            $table->integer('Redoslijed');
 
             $table->foreignId('IdPrijave');
-            $table->foreign('IdPrijave')->references('id')->on('_listaPrijava');
+            $table->foreign('IdPrijave')->references('id')->on('listaPrijava');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_korisnik_podatak');
+        Schema::dropIfExists('korisnikPodatak');
     }
 };

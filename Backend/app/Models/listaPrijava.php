@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class listaPrijava extends Model
+class listaprijava extends Model
 {
+    protected $table = 'listaprijava';
     use HasFactory;
 
     protected $fillable = [

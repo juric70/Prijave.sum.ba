@@ -10,7 +10,7 @@ class ListaPrijavaController extends Controller
 {
     //INDEX
     public function index() {
-        $podaci = listaPrijava::get();
+        $podaci = listaprijava::get();
         return response()->json($podaci, 200);
     }
 
@@ -18,7 +18,7 @@ class ListaPrijavaController extends Controller
     public function show($id){
         try
         {
-            $podaci = listaPrijava::findOrFail($id);
+            $podaci = listaprijava::findOrFail($id);
             return response()->json($podaci);
         }
         catch (\Exception $e){
@@ -28,10 +28,18 @@ class ListaPrijavaController extends Controller
 
     }
 
+    //Sve prijave jednog korisnika
+    public function prijaveKorisnika($IdKreatora)
+    {
+        $podaci = listaprijava::where('IdKreatora', $IdKreatora)->get();
+        
+        return response()->json($podaci);
+    }
+
     //Sve prijave jedne radionice
     public function prijave($IdRadionice)
     {
-        $podaci = listaPrijava::where('IdRadionice', $IdRadionice)->get();
+        $podaci = listaprijava::where('IdRadionice', $IdRadionice)->get();
         
         return response()->json($podaci);
     }
@@ -49,12 +57,12 @@ class ListaPrijavaController extends Controller
                 return response()->json($validator->errors(),422);
             }
 
-            $podaci = listaPrijava::create([
+            $podaci = listaprijava::create([
                 'IdKreatora' => $request->IdKreatora,
                 'IdRadionice' => $request->IdRadionice
             ]);
 
-            return response()->json($podaci->IdRadionice, 201);
+            return response()->json($podaci->id, 201);
         }
         catch (\Exception $e){
             return response()->json($e->getMessage());
@@ -66,7 +74,7 @@ class ListaPrijavaController extends Controller
     public function destroy($id){
         try
         {
-            $podaci = listaPrijava::findOrFail($id);
+            $podaci = listaprijava::findOrFail($id);
             $podaci->delete();
             return response()->json(204);
         }
