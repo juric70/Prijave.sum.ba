@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Models\User; // Uverite se da ste dodali ovu liniju
 
 class UserSeeder extends Seeder
 {
@@ -38,6 +37,16 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        DB::table('users')->insert($users);
+        // Umetanje korisnika u bazu
+        foreach ($users as $userData) {
+            $user = User::create($userData);
+
+            // Dodeljivanje rola
+            if ($user->email === 'john@example.com') {
+                $user->assignRole('superAdmin'); // Dodeljuje ulogu 'superAdmin'
+            } elseif ($user->email === 'jane@example.com') {
+                $user->assignRole('kreator'); // Dodeljuje ulogu 'kreator'
+            }
+        }
     }
 }

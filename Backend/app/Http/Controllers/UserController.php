@@ -6,33 +6,67 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function assignRole(Request $request, $userId)
-{
-    $user = User::find($userId);
-    $role = Role::where('name', $request->role)->first();
+    public function dodajRolu(Request $request)
+    {
+        // Validacija ulaza
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'role_name' => 'required|exists:roles,name',
+        ]);
 
-    if ($user && $role) {
-        $user->assignRole($role->name);
-        return response()->json(['message' => 'Role assigned successfully.']);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        // Dodeljivanje rola
+        $user = User::find($request->user_id);
+        $user->assignRole($request->role_name);
+
+        return response()->json(['message' => 'Rola dodeljena korisniku!'], 200);
     }
 
-    return response()->json(['message' => 'User or role not found.'], 404);
+    public function provjeriRolu(Request $request)
+{
+    // Validacija ulaza
+    $validator = Validator::make($request->all(), [
+        'user_id' => 'required|exists:users,id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
+    }
+
+    // Dohvaćanje korisnika
+    $user = User::find($request->user_id);
+    $roles = $user->getRoleNames(); // Dohvaća sve role
+
+    return response()->json(['roles' => $roles], 200);
+}
+
+public function obrisiRolu(Request $request)
+{
+    // Validacija ulaza
+    $validator = Validator::make($request->all(), [
+        'user_id' => 'required|exists:users,id',
+        'role_name' => 'required|exists:roles,name',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
+    }
+
+    // Brisanje rola
+    $user = User::find($request->user_id);
+    $user->removeRole($request->role_name);
+
+    return response()->json(['message' => 'Rola obrisana korisniku!'], 200);
 }
 
 
-    public function checkUserRole($userId, $roleName)
-    {
-        $user = User::find($userId);
-
-        if ($user && $user->hasRole($roleName)) {
-            return response()->json(['message' => true]);
-        }
-
-        return response()->json(['message' => false], 404);
-    }
 
 
 }

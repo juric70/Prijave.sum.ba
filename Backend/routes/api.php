@@ -19,7 +19,11 @@ use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::post('/users/{userId}/assign-role', [UserController::class, 'assignRole']);
-    Route::get('/users/{userId}/check-role/{roleName}', [UserController::class, 'checkUserRole']);
+Route::middleware(['auth:sanctum', 'role:superAdmin'])->group(function () {
+    Route::post('/assign_role', [UserController::class, 'dodajRolu']);
+Route::post('/check_role', [UserController::class, 'provjeriRolu']);
+Route::post('/remove_role', [UserController::class, 'obrisiRolu']);
 });
+
+
+
