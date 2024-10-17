@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\User; // Uverite se da ste dodali ovu liniju
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -43,9 +43,9 @@ class UserSeeder extends Seeder
 
             // Dodeljivanje rola
             if ($user->email === 'john@example.com') {
-                $user->assignRole('superAdmin'); // Dodeljuje ulogu 'superAdmin'
+                $user->assignRole('superAdmin');
             } elseif ($user->email === 'jane@example.com') {
-                $user->assignRole('kreator'); // Dodeljuje ulogu 'kreator'
+                $user->assignRole('kreator');
             }
         }
     }

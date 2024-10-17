@@ -9,10 +9,10 @@ class Role extends Model
 {
     use HasFactory;
 
-    // Polja koja su masovno dodeljiva
+   
     protected $fillable = ['name'];
 
-    // Definisanje odnosa sa User modelom
+
     public function users()
     {
         return $this->belongsToMany(User::class);

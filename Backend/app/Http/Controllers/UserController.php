@@ -42,7 +42,7 @@ class UserController extends Controller
 
     // Dohvaćanje korisnika
     $user = User::find($request->user_id);
-    $roles = $user->getRoleNames(); // Dohvaća sve role
+    $roles = $user->getRoleNames();
 
     return response()->json(['roles' => $roles], 200);
 }

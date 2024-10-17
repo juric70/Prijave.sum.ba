@@ -30,5 +30,14 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'eduid' => [
+        'client_id' => env('EDUID_CLIENT_ID'),
+        'client_secret' => env('EDUID_CLIENT_SECRET'),
+        'user_url' => env('EDUID_SERVER_USER_URL'),
+        'token_url' => env('EDUID_SERVER_TOKEN_URL'),
+        'authorize_url' => env('EDUID_SERVER_AUTHORIZE_URL'),
+        'logout_url' => env('EDUID_SERVER_LOGOUT_URL'),
+        'redirect' => '/oauth/callback',
+    ],
 
 ];

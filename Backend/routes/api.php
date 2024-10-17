@@ -19,11 +19,25 @@ use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
+//moze sve
 Route::middleware(['auth:sanctum', 'role:superAdmin'])->group(function () {
     Route::post('/assign_role', [UserController::class, 'dodajRolu']);
-Route::post('/check_role', [UserController::class, 'provjeriRolu']);
-Route::post('/remove_role', [UserController::class, 'obrisiRolu']);
+    Route::post('/check_role', [UserController::class, 'provjeriRolu']);
+    Route::post('/remove_role', [UserController::class, 'obrisiRolu']);
 });
+
+//upravlja prijavama
+Route::middleware(['auth:sanctum', 'role:kreator'])->group(function () {
+    
+});
+
+//pregledava svoje
+Route::middleware(['auth:sanctum', 'role:user'])->group(function () {
+    
+});
+
+//guest moze vidjeti samo natjecaje
+
 
 
 
