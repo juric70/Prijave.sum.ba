@@ -41,7 +41,7 @@ class PitanjaRadioniceController extends Controller
 
         try{
            $validator = Validator::make( $request->all(),[
-                'VrstaPodatka' => 'required|unique:pitanjaRadionice,VrstaPodatka,NULL,id,radionice,' . $request->input('radionice'),
+                'VrstaPodatka' => 'required',
                 'radionice' => 'required|exists:radionica,id',
                 'NazivPitanja' => 'required|unique:pitanjaRadionice,NazivPitanja,NULL,id,radionice,' . $request->input('radionice')
             ]);

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_listaPrijava', function (Blueprint $table) {
+        Schema::create('listaPrijava', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('_listaPrijava');
+        Schema::dropIfExists('listaPrijava');
     }
 };

@@ -93,6 +93,7 @@ class ListaPrijavaController extends Controller
         $users = User::whereIn('id', $prijavljeniUseriIds)->get();
         return $this->downloadCSV($users, $radionica);
     } catch (\Exception $e) {
+        dd($e);
         return response()->json(['message' => 'Internal Server Error'], 500);
     }
 }

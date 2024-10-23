@@ -7,11 +7,17 @@
     </NuxtLink>
     <p>Sign Up</p>
     <div class="login-container">
-      <form class="login-form">
+      <form class="login-form" @submit.prevent="onRegister">
         <div class="input-group">
           <input type="text" id="name" name="name" placeholder="Enter your name" required>
           <div class="label-div">
             <NameIcon class="icon2" /> <label for="name" class="label">Name</label>
+          </div>
+        </div>
+        <div class="input-group">
+          <input type="text" id="lastname" name="lastname" placeholder="Enter your last name" required>
+          <div class="label-div">
+            <NameIcon class="icon2" /> <label for="name" class="label">Last name</label>
           </div>
         </div>
         <div class="input-group">
@@ -53,6 +59,43 @@ import MailIcon from '~/assets/icons/mail.svg'
 import PasswordIcon from '~/assets/icons/password.svg'
 import ArrowRightIcon from '~/assets/icons/arrow-right.svg'
 import NameIcon from '~/assets/icons/name.svg'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true;
+
+async function onRegister(){
+  let localDatum = new Date();
+  let unesenDatum = new Date(document.getElementById("date").value);
+  await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+  if(document.getElementById("password").value != document.getElementById("confirm-password").value){
+    alert("Sifre se ne podudaraju!");    
+  }
+  else if(localDatum.getTime() < unesenDatum.getTime()){
+    alert("Neispravan unos datuma!");
+  }
+  else{
+    try {
+      await axios.post("http://localhost:8000/register", {
+        email: document.getElementById("email").value,
+        name: document.getElementById("name").value,
+        lastname: document.getElementById("lastname").value,
+        password: document.getElementById("password").value,
+        datumRodjenja: document.getElementById("date").value,
+    }).then(res => {
+      navigateTo('/');
+    });
+    //let {data} = await axios.get("http://localhost:8000/api/user");
+    }catch(error){
+      if(error.response.status == 404){
+      alert("Već ste ulogirani!");
+      navigateTo('/');
+    }
+    else if(error.response.status == 422){
+      alert("Email vec zauzet!");
+    }
+    }
+  }
+}
 </script>
 
 <style scoped>

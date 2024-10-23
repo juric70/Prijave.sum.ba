@@ -3,50 +3,80 @@
     <div class="button-container">
       <button class="hero-button" @click="showInfo(1)">Otvorene prijave</button>
       <button class="hero-button" @click="showInfo(2)">Zatvorene prijave</button>
-      <button class="hero-button" @click="showInfo(3)">Moje prijave</button>
-      <button class="hero-button" @click="showInfo(4)">Aktivno</button>
+      <button class="hero-button" @click="redirected()">Moje prijave</button>
     </div>
     <div class="hero-content">
       <div v-if="selectedButton === 1">
         <h2>Otvorene prijave</h2>
-        <p></p>
+        <swiper
+          :slides-per-view="slidesPerView"
+          :space-between="30"
+          :pagination="{ clickable: true }"
+          :modules="modules"
+          :navigation="true"
+          class="mySwiper"
+        >
+          <swiper-slide v-for="(item, index) in otvoreneI" :key="index">
+            <div style="color: white; background-color: lightslategray; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #000; padding: 10px; margin: 5px; height: 300px;">
+              <nuxt-link class="linkovi" :to="'/opisprijave?id=' + otvoreneId[index]"><h2>{{ item }}</h2>
+              <h5>{{ otvoreneO[index] }}</h5></nuxt-link>
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
       <div v-else-if="selectedButton === 2">
         <h2>Zatvorene prijave</h2>
-        <p>Description 2</p>
+        <swiper
+          :slides-per-view="slidesPerView"
+          :space-between="30"
+          :pagination="{ clickable: true }"
+          :modules="modules"
+          :navigation="true"
+          class="mySwiper"
+        >
+          <swiper-slide v-for="(item, index) in zavrseneI" :key="index">
+            <div style="color: white; background-color: lightslategray; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #000; padding: 10px; margin: 5px; height: 300px;">
+              <nuxt-link class="linkovi" :to="'/opisprijave?id=' + zavrseneId[index]"><h2>{{ item }}</h2>
+              <h5>{{ zavrseneO[index] }}</h5></nuxt-link>
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
       <div v-else-if="selectedButton === 3">
         <h2>Moje prijave</h2>
-        <p>Description 3</p>
+        <swiper
+          :slides-per-view="slidesPerView"
+          :space-between="30"
+          :pagination="{ clickable: true }"
+          :modules="modules"
+          :navigation="true"
+          class="mySwiper"
+        >
+        <swiper-slide v-for="(item, index) in mojeI" :key="index">
+            <div style="color: white; background-color: lightslategray; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #000; padding: 10px; margin: 5px; height: 300px;">
+              <nuxt-link class="linkovi" :to="'/opisprijave?id=' + mojeId[index]"><h2>{{ item }}</h2>
+              <h5>{{ mojeO[index] }}</h5></nuxt-link>
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
-      <div v-else-if="selectedButton === 4">
-        <h2>Aktivno</h2>
-        <p>Description 4</p>
-      </div>
-      <swiper
-        :slidesPerView="slidesPerView"
-        :spaceBetween="30"
-        :pagination="{ clickable: true }"
-        :modules="modules"
-        :navigation="true"
-        class="mySwiper"
-      >
-        <SwiperSlide v-for="photo in photos" :key="photo">
-          <img :src="`/_nuxt/public/${photo}`" alt="" />
-        </SwiperSlide>
-      </swiper>
     </div>
   </section>
 </template>
 
 
+
+
+
 <script>
-import { Swiper, SwiperSlide } from 'swiper/vue'; // Importing Swiper for Vue
-import 'swiper/swiper-bundle.css'; // Import Swiper styles
+import { Swiper, SwiperSlide } from 'swiper/vue'; 
+import 'swiper/swiper-bundle.css'; 
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper/modules';
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default {
   components: {
@@ -55,7 +85,10 @@ export default {
   },
   setup() {
     const slidesPerView = ref(3);
-    const navigationOptions = ref(true);
+    const navigationOptions = ref({
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    });
 
     const updateResponsiveSettings = () => {
       if (window.innerWidth < 768) {
@@ -63,10 +96,7 @@ export default {
         navigationOptions.value = false;
       } else {
         slidesPerView.value = 3;
-        navigationOptions.value = {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        };
+        navigationOptions.value = navigationOptions.value;
       }
     };
 
@@ -84,25 +114,90 @@ export default {
   data() {
     return {
       selectedButton: 1,
-      courses: [],
-      photos: [
-        'photo1.jpg',
-        'photo2.jpg',
-        'photo3.jpg',
-        'photo4.jpg',
-        'photo5.jpg',
-      ],
+      otvoreneI: [],
+      otvoreneId: [],
+      otvoreneO: [],
+      zavrseneI: [],
+      zavrseneO: [],
+      zavrseneId: [],
+      mojeI: [],
+      mojeO: [],
+      mojeId: [],
+      modules: [Pagination, Navigation],
+      user: [],
     };
   },
+  mounted() {
+    this.fetchData();
+    this.generirajHeader();
+  },
   methods: {
+    async fetchData() {
+      try {
+        const response = await axios.get('http://localhost:8000/Radionica');
+        this.zavrseneI = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.NazivRadionice);
+        this.zavrseneO = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.OpisRadionice);
+        this.zavrseneId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
+        this.otvoreneI = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.NazivRadionice);
+        this.otvoreneId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
+        this.otvoreneO = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.OpisRadionice);
+        this.mojeI = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.NazivRadionice);
+        this.mojeId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
+        this.mojeO = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.OpisRadionice);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    redirected(){
+      navigateTo("/prijave");
+    },
+    async generirajHeader(){
+      try{
+            let{data} = await axios.get("http://localhost:8000/api/user");
+            this.user = data;
+            this.napraviHeader(data);
+            console.log(this.user);
+          }
+          catch(error){console.log(error)
+            if(error.response.status == 401){
+              document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/login' class='navbar-item' data-v-a81738bd>Login</a>";
+              document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/login' class='mobile-nav-item' data-v-a81738bd>Login</a>";
+            }
+        }
+      },
+    async napraviHeader(data){
+        switch(data.vrstaKorisnika){
+          case 1:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/korisnici' class='navbar-item' data-v-a81738bd>Korisnici</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/korisnici' class='mobile-nav-item' data-v-a81738bd>Korisnici</a>";
+          case 2:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/create' class='navbar-item' data-v-a81738bd>Kreiraj</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/create' class='mobile-nav-item' data-v-a81738bd>Kreiraj</a>";
+          case 3:
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
+
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
+
+          document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
+          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
+          
+        }
+      },
     showInfo(buttonNumber) {
       this.selectedButton = buttonNumber;
     },
-  },
-};
+  }
+}
 </script>
 
+
+
+
+
 <style scoped>
+
 .hero {
   display: flex;
   flex-direction: column;
@@ -117,7 +212,6 @@ export default {
   box-sizing: border-box;
 }
 
-
 .hero-content {
   max-width: 75%;
 }
@@ -126,7 +220,11 @@ export default {
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
+.hero h5 {
 
+  padding: 10px;
+  margin: 10px;
+}
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 40px;
@@ -156,18 +254,36 @@ export default {
   background-color: rgba(16, 28, 44, 0.9);
 }
 
+
 @media (max-width: 768px) {
-  .hero h1 {
+ .hero h1 {
     font-size: 2rem;
   }
 
-  .hero p {
+ .hero p {
     font-size: 1rem;
   }
 
-  .swiper-button-next,
-  .swiper-button-prev {
+ .swiper-button-next,
+ .swiper-button-prev {
     display: none;
   }
+
+  .swiper-slide-content {
+  color: white;
+  background-color: lightslategray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  padding: 10px; /* Ensure padding is applied */
+  margin: 5px;
+  height: 300px;
+}
+}
+.linkovi{
+  color:white;
+  text-decoration: none;
 }
 </style>
