@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\listaPrijava;
+use App\Models\Radionica;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -98,12 +99,9 @@ class ListaPrijavaController extends Controller
 
 public function downloadCSV($users, $radionica)
 {
-
-
     $usersData = [
         ['Korisnik ID', 'Ime', 'Email', 'Odgovor'],
     ];
-
     foreach ($users as $user) {
         $usersData[] = [$user->id, $user->name, $user->email, $user->odgovor];
     }
