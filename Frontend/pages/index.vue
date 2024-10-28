@@ -1,14 +1,12 @@
-<script setup lang="ts">
-</script>
-
+<!-- pages/index.vue -->
 <template>
     <div>
-        <Header></Header>
-        <Slider></Slider>
-        <Footer></Footer>
+      <Slider /> 
+      <Footer></Footer>
     </div>
-</template>
-
-
-<script setup>
-</script>
+  </template>
+  
+  <script setup>
+  import Slider from '~/components/Slider.vue';
+  </script>
+  

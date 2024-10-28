@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <div class="about-us-container">
       <h1>O nama</h1>
       <p>

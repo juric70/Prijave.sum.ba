@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <CreateHero></CreateHero>
     </div>
 </template>

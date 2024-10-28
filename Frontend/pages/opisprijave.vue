@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <Opis></Opis>
     </div>
 </template>

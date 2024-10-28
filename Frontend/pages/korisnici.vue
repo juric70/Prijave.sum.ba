@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <Korisnici></Korisnici>
     </div>
 </template>

@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <Radionice></Radionice>
     </div>
 </template>

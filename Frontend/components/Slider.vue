@@ -203,7 +203,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   max-width: 100%;
   background-color: white;
   color: black;

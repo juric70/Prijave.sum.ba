@@ -3,7 +3,6 @@
 
 <template>
     <div>
-        <Header></Header>
         <Forma></Forma>
     </div>
 </template>
