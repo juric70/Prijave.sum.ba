@@ -11,6 +11,7 @@ U ovom dokumentu se nalazi:
  - Pokretanje projekta prvi put
  - Kako generirati generične podatke
  - Osnovne postavke projekta
+ - Slanje promjena na Git
 
 OSNOVNI ZAHTJEVI ZA POKRETANJE PROJEKTA: 
 
@@ -45,6 +46,14 @@ U slučaju da ste već generirali tablice u bazi, opcija "php artisan migrate --
 
 U slučaju da su vam se lose nasumično generirali podatci, možete odraditi naredbu: 
 "php artisan migrate:fresh --seed"
+
+
+SLANJE PROMJENA NA GIT: 
+
+Za poslati promjene na Git kada završite sa svojim Feature-om, prvo provjerite da niste na branchu "main" 
+ili "master". Ako jeste, odradite "git checkout -b mojeIme/FeatureKojiRadite".
+Zatim pozovite naredbe: "git add .", "git commit -m "*Opišite šta ste promjenili*"", 
+"git push --set-upstream https://github.com/juric70/Prijave.sum.ba.git *imeBrancha*"
 
 
 

@@ -1,273 +1,213 @@
-<template>
-  <div class="container">
-    <NuxtLink to="/" class="nuxt-link"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-        viewBox="0 0 24 24">
-        <path fill="#FFFFFF" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-      </svg>
-    </NuxtLink>
-    <p>Login</p>
-    <div class="login-container">
-      <form class="login-form" @submit.prevent="onLogin">
-        <div class="input-group">
-          <input type="email" id="email" name="email" placeholder="Enter your email" required>
-          <div class="label-div">
-            <MailIcon class="icon2" /> <label for="email" class="label">Mail</label>
-          </div>
-        </div>
-        <div class="input-group">
-          <input type="password" id="password" name="password" placeholder="Enter your password" required>
-          <div class="label-div">
-            <PasswordIcon class="icon2" /> <label for="password" class="label">Password</label>
-          </div>
-        </div>
-        <div class="submit-div">
-          <div class="checkbox-container">
-            <NuxtLink to="/register" id="registriranje">Nemate račun?</NuxtLink>
-          </div>
-          <button type="submit" class="login-button">
-            <ArrowRightIcon class="icon-arrow" />
-          </button>
-        </div>
-      </form>
-    </div>
-    <NuxtLink to="/"><img src="/public/sumit-Photoroom.png" alt="SUMIT icon" class="large"></NuxtLink>
-  </div>
-</template>
-
-<script setup>
-import MailIcon from '~/assets/icons/mail.svg'
-import PasswordIcon from '~/assets/icons/password.svg'
-import ArrowRightIcon from '~/assets/icons/arrow-right.svg'
-import axios from 'axios'
-
+<script>
+import axios from 'axios';
 axios.defaults.withCredentials = true;
 
-async function onLogin(){
-  await axios.get("http://localhost:8000/sanctum/csrf-cookie");
-    try {
-      await axios.post("http://localhost:8000/login", {
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value,
-    }).then(res => {
-      navigateTo('/');
-    });
-    //let {data} = await axios.get("http://localhost:8000/api/user");
-  }catch(error){
-    console.log(error);
-    if(error.response.status == 422)alert("Niste dobro unijeli podatke!");
-    else if(error.response.status == 404){
-      alert("Već ste ulogirani!");
-      navigateTo('/');
+export default{
+    mounted(){
+    },
+    data() {
+    return {
+      floatedLabels: {}
     }
-    document.getElementById("password").value = "";
-  }
-  
+  },
+    methods: {
+        async prijaviSe(){
+            await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+            try {
+                await axios.post("http://localhost:8000/login", {
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value,
+                }).then(res => {
+                navigateTo('/');
+            });
+        }catch(error){
+            console.log(error);
+            if(error.response.status == 422)alert("Niste dobro unijeli podatke!");
+            else if(error.response.status == 404){
+            alert("Već ste ulogirani!");
+            navigateTo('/');
+            }
+            document.getElementById("password").value = "";
+        }
+    },
+    floatLabel(inputId) {
+      this.floatedLabels[inputId] = true
+    },
+    isFloated(inputId) {
+      return this.floatedLabels[inputId]
+    }
+}
 }
 
 </script>
 
+<template>
+    <div class="square">
+      <div class="inputWrapper">
+        <h3 class="title">Prijavi se</h3>
+        <input type="text" id="email" name="email" required class="inputField" @focus="floatLabel('email')">
+        <div class="mailIcon">  <label for="email" class="label" :class="{ floated: isFloated('email') }">Mail</label>  </div>
+        <input type="text" id="password" name="password" required @focus="floatLabel('password')">
+        <div class="passwdIcon">  <label for="password" class="label" :class="{ floated: isFloated('password') }">Lozinka</label>  </div>
+        <button type="button" class="loginButton" @click="prijaviSe">Prijavi se</button>
+        <button type="submit" class="eduButtonLeft">
+            <NuxtLink to="https://aai.sum.ba/sso/module.php/core/loginuserpass.php?AuthState=_a843172e772ea3620d057673cf235745ab869f963c%3Ahttps%3A%2F%2Faai.sum.ba%2Fsso%2Fsaml2%2Fidp%2FSSOService.php%3Fspentityid%3Dhttps%253A%252F%252Feucenje.sum.ba%252Fsimplesaml%252Fmodule.php%252Fsaml%252Fsp%252Fmetadata.php%252Fmoodle-sum-sp%26RelayState%3Dhttps%253A%252F%252Feucenje.sum.ba%252Fmoodle%252Fauth%252Fsimplesaml%252Findex.php%253Flast_page%253D%26cookieTime%3D1734347783" id="eduLink"></NuxtLink>
+        </button>
+        <button type="submit" class="eduButtonRight">
+            <NuxtLink to="https://aai.sum.ba/sso/module.php/core/loginuserpass.php?AuthState=_a843172e772ea3620d057673cf235745ab869f963c%3Ahttps%3A%2F%2Faai.sum.ba%2Fsso%2Fsaml2%2Fidp%2FSSOService.php%3Fspentityid%3Dhttps%253A%252F%252Feucenje.sum.ba%252Fsimplesaml%252Fmodule.php%252Fsaml%252Fsp%252Fmetadata.php%252Fmoodle-sum-sp%26RelayState%3Dhttps%253A%252F%252Feucenje.sum.ba%252Fmoodle%252Fauth%252Fsimplesaml%252Findex.php%253Flast_page%253D%26cookieTime%3D1734347783" id="eduLink">Prijava putem eduID</NuxtLink>
+        </button>
+        <div>
+            <div class="text1">Nemate račun?</div>
+            <div class="text2">
+                <NuxtLink to="/register" id="link">Registrirajte se</NuxtLink>
+            </div>
+            <div class="text3">
+                <NuxtLink to="/register" id="link">Zaboravili ste lozinku?</NuxtLink>
+            </div>
+        </div>
+    </div>
+    </div>
+</template>
 
 <style scoped>
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-#registriranje{
-  color:white;
-}
-
-.container {
-  background-color: #101D2F;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: 5px;
-  align-items: center;
-  color: white;
-}
-
-.nuxt-link {
-  text-decoration: none;
-  color: white;
-  align-self: flex-start;
-  margin: 20px 40px;
-}
-
-.nuxt-link:hover {
-  color: rgb(172, 172, 172);
-  text-decoration: underline;
-}
-
-p {
-  font-size: 3em;
-  text-align: center;
-}
-
-.login-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 20px;
-}
-
-.login-form {
-  background-color: #182A44;
-  padding: 20px;
-  border-radius: 8px;
-  border: 3px solid white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.input-group {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.input-group label {
-  display: block;
-  margin-top: 5px;
-  color: #ffffff;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  background: none;
-  font-size: 16px;
-  color: white;
-}
-
-.input-group input:focus {
-  outline: none;
-}
-
-.input-group input::placeholder {
-  color: #ccc;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.checkbox-label {
-  color: white;
-  font-size: 14px;
-  margin-left: 5px;
-}
-
-.login-button {
-  background-color: #101D2F;
-  border: none;
-  border-radius: 5px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background-color: #09101a;
-}
-
-.label-div {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.icon2 {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-
-.label {
-  font-size: 18px;
-}
-
-.submit-div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.large {
-  width: 80%;
-  max-width: 280px;
-  height: auto;
-  margin-top: 10px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 10px;
-  }
-
-  .nuxt-link {
+.square{
+    background-color: #eeeeee;
+    width: 250px;
+    height: 400px;
+    position: absolute;
     align-self: center;
-    margin-right: 0;
-  }
-
-  p {
-    text-align: center;
-    margin: 10px 0;
-  }
-
-  .login-form {
-    padding: 20px;
-    width: 90%;
-  }
-
-  .submit-div {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .checkbox-container {
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  .login-button {
-    width: 100%;
-    max-width: 200px;
-    height: 40px;
-  }
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
 }
-
-@media (max-width: 480px) {
-  .login-form {
-    padding: 15px;
-    width: 95%;
-  }
-
-  .login-button {
-    width: 100%;
+.title {
+    color: #205782;
+    text-align: center;
+    margin-top: 30px;
+}
+#email {
+    width: 170px;
     height: 40px;
-  }
-
-  .submit-div {
-    flex-direction: column;
-  }
+    position: absolute;
+    top: 27%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-color: #205782;
+    border-radius: 10px; 
+}
+#password {
+    width: 170px;
+    height: 40px;
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-color: #205782;
+    border-radius: 10px; 
+}
+.mailIcon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 90px;
+    left: 40px;
+    color: #205782;
+}
+.passwdIcon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 150px;
+    left: 40px;
+    color: #205782;
+}
+.label {
+    font-size: 12px;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.label.floated {
+  top: 0px;
+  left: 5px;
+  font-size: 10px;
+  color: #123456;
+}
+.loginButton {
+  background-color: #205782;
+  border: none;
+  border-radius: 10px;
+  width: 180px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute;
+  top: 240px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+.eduButtonLeft {
+  background-color: #205782;
+  border: none;
+  border-radius: 10px 0px  0px 10px;
+  width: 50px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute;
+  top: 290px;
+  left: 24%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+.eduButtonRight {
+  background-color: #2196f3;
+  border: none;
+  border-radius: 0px 10px 10px 0px;
+  width: 130px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute;
+  top: 290px;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  font-size: 10px;
+}
+.text1 {
+    position: absolute;
+    top: 340px;
+    left: 32%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: black;
+}
+.text2 {
+    position: absolute;
+    top: 340px;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #205782;
+}
+.text3 {
+    position: absolute;
+    top: 360px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    color: #205782;
+}
+#link {
+  color:#205782;
+  text-decoration: none;
+}
+#eduLink {
+    text-decoration: none;
+    color: white;
 }
 </style>
