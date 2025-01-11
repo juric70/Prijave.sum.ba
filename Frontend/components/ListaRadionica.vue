@@ -119,4 +119,5 @@ const formatDateTime = (dateTimeString) => {
   width: 94%;
   padding-left: 16px;
 }
+
 </style>
