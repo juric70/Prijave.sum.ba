@@ -78,7 +78,7 @@
         <td>${data2.email}</td> <!-- Accessing data correctly -->
         <td>${pomD.toLocaleDateString()}</td>
         <td>
-          <button class='Buttoni' data-v-ea3ac3e9>SuperAdmin</button>
+          <button class='Buttoni' data-v-ea3ac3e9>Pregledaj prijavu</button>
         </td>
       `;
   

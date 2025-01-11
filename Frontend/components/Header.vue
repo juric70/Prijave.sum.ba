@@ -5,7 +5,8 @@
       <div class="navbar-end">
         <nuxt-link to="/" class="navbar-item">Home</nuxt-link>
         <nuxt-link to="/about-us" class="navbar-item">About Us</nuxt-link>
-        <button @click="fetchDataAndDownload()">Download Data as CSV</button>
+        <!-- Trenutno ugradjena verzija za pretvaranje podataka u Excel (zasad samo smeta)
+        <button @click="fetchDataAndDownload()">Download Data as CSV</button>-->
       </div>
       <div class="hamburger" @click="toggleMenu">
         <span></span>
@@ -24,7 +25,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-
+const menuOpen = null;
 // Define your jsonToCsv function here
 function jsonToCsv(jsonData) {
 const keys = Object.keys(jsonData[0]);

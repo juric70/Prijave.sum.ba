@@ -135,12 +135,12 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get('http://localhost:8000/Radionica');
-        this.zavrseneI = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.NazivRadionice);
-        this.zavrseneO = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.OpisRadionice);
+        this.zavrseneI = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.NazivRadionice);
+        this.zavrseneO = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.OpisRadionice);
         this.zavrseneId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
-        this.otvoreneI = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.NazivRadionice);
-        this.otvoreneId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
-        this.otvoreneO = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.OpisRadionice);
+        this.otvoreneI = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.NazivRadionice);
+        this.otvoreneId = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.id);
+        this.otvoreneO = response.data.filter(item => new Date(item.PrijaveDo) > new Date()).map(item => item.OpisRadionice);
         this.mojeI = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.NazivRadionice);
         this.mojeId = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.id);
         this.mojeO = response.data.filter(item => new Date(item.PrijaveDo) < new Date()).map(item => item.OpisRadionice);
