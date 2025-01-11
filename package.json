@@ -1,0 +1,34 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-carousel": "^2.0.0",
+    "axios": "^1.7.2",
+    "nuxt": "^3.11.2",
+    "nuxt-swiper": "^1.2.2",
+    "swiper": "^11.1.4",
+    "vue": "^3.4.21",
+    "vue-carousel": "^0.18.0",
+    "vue-router": "^4.3.0",
+    "vue-slider-component": "^3.2.24",
+    "vue3-carousel": "^0.3.3",
+    "vue3-carousel-nuxt": "^1.1.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "vite-svg-loader": "^5.1.0"
+  },
+  "version": "1.0.0",
+  "description": "Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}
