@@ -58,7 +58,7 @@
             await axios.get("http://localhost:8000/SvaPitanja/" + this.brojRadionice).then(res =>{
             document.getElementById("tijelo1").appendChild(document.createElement("tr"));
               res.data.forEach(pitanje=>{
-                tijelo1.lastChild.innerHTML += ("<td>"+pitanje.NazivPitanja+"</td>");
+                tijelo1.lastChild.innerHTML += ("<td><b>"+pitanje.NazivPitanja+"</b></td>");
               });
             })
           try{

@@ -16,7 +16,7 @@
     "nuxt-swiper": "^1.2.2",
     "swiper": "^11.1.4",
     "vue": "^3.4.21",
-    "vue-carousel": "^0.18.0",
+    "vue-carousel": "^0.11.0",
     "vue-router": "^4.3.0",
     "vue-slider-component": "^3.2.24",
     "vue3-carousel": "^0.3.3",

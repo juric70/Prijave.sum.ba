@@ -8,9 +8,10 @@ export default {
   css: [
     './assets/style.css'
   ],
-  
 
   vite: {
     plugins: [viteSvgLoader()],
   },
+
+  compatibilityDate: "2025-01-12",
 };
