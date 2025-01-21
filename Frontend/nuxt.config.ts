@@ -4,9 +4,16 @@ import viteSvgLoader from "vite-svg-loader";
 export default {
   modules: ["vue3-carousel-nuxt"],
   devtools: { enabled: true },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 
   css: [
-    './assets/style.css'
+    './assets/style.css',
+    '/assets/css/main.css',
   ],
 
   vite: {
