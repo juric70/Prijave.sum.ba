@@ -3,6 +3,6 @@
 
 <template>
     <div>
-        <CreateHero></CreateHero>
+        <OpisRadionice></OpisRadionice>
     </div>
 </template>

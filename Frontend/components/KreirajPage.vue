@@ -42,44 +42,8 @@ export default {
     };
   },
   mounted(){
-    this.generirajHeader();
   },
   methods: {
-    async generirajHeader(){
-        try{
-          let{data} = await axios.get("http://localhost:8000/api/user");
-          this.napraviHeader(data);
-          this.user = data;
-        }
-        catch(error){
-          if(error.response.status == 401){
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/login' class='navbar-item' data-v-a81738bd>Login</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/login' class='mobile-nav-item' data-v-a81738bd>Login</a>";
-          }
-        }
-      },
-    async napraviHeader(data){
-        switch(data.vrstaKorisnika){
-          case 1:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/korisnici' class='navbar-item' data-v-a81738bd>Korisnici</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/korisnici' class='mobile-nav-item' data-v-a81738bd>Korisnici</a>";
-          case 2:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/create' class='navbar-item' data-v-a81738bd>Kreiraj</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/create' class='mobile-nav-item' data-v-a81738bd>Kreiraj</a>";
-          case 3:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
-
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
-
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-          
-        }
-      },
-
-
     promjenaVrste(event) {
       let e = event.target.parentNode;
       let child = e.childNodes[3];
@@ -148,7 +112,7 @@ export default {
       let forma = document.getElementById("Radionica");
       let pom = forma.lastElementChild.previousSibling;
       let pom2 = document.createElement("div");
-      pom2.innerHTML = "<input type='text' data-v-0550afab class='dugiteksti' placeholder='Unesite naziv pitanja...'/><select data-v-0550afab class='VrstePitanja'><option data-v-0550afab value='KratkiOdgovor'> Kratki Odgovor </option><option data-v-0550afab value='ViseTocnih'> Vise Tocnih </option><option data-v-0550afab value='JedanOd'> Jedan Od </option></select><button class='Closer' data-v-0550afab @click='Destroying'>X</button>";
+      pom2.innerHTML = "<input type='text' data-v-e2b99966 class='dugiteksti' placeholder='Unesite naziv pitanja...'/><select data-v-e2b99966 class='VrstePitanja'><option data-v-e2b99966 value='KratkiOdgovor'> Kratki Odgovor </option><option data-v-e2b99966 value='ViseTocnih'> Vise Tocnih </option><option data-v-e2b99966 value='JedanOd'> Jedan Od </option></select><button class='Closer' data-v-e2b99966 @click='Destroying'>X</button>";
       forma.insertBefore(pom2, forma.lastElementChild);
 
       let selectElement = pom2.querySelector(".VrstePitanja");
@@ -265,7 +229,6 @@ export default {
 <style scoped>
 .hero {
   height: 100vh;
-  background-color: white;
   text-align: center;
 }
 

@@ -3,6 +3,6 @@
 
 <template>
     <div>
-        <FormaP></FormaP>
+        <PrijavljivanjePage></PrijavljivanjePage>
     </div>
 </template>

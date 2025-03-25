@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import PrijavaPage from '~/components/PrijavaPage.vue';
+
 </script>
 
 <template>
     <div>
-        <Forma></Forma>
+        <PrijavaPage></PrijavaPage>
     </div>
 </template>
