@@ -6,7 +6,7 @@ use App\Http\Controllers\ListaPrijavaController;
 use App\Http\Controllers\KorisnikPodatakController;
 use App\Http\Controllers\PitanjaRadioniceController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,3 +60,9 @@ Route::controller(KorisnikPodatakController::class)->group(function (){
 Route::get('/dajKorisnike', [RegisteredUserController::class, 'index']);
 Route::post('/promjeniVrstu/{id}', [RegisteredUserController::class, 'promjeni']);
 Route::get('/prikaziKorisnika/{id}', [RegisteredUserController::class, 'show']);
+
+
+Route::controller(UserController::class)->group(function (){
+    Route::get('/User', 'index');
+    Route::get('/User/{id}','show');
+});
