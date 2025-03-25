@@ -3,6 +3,6 @@
 
 <template>
     <div>
-        <Opis></Opis>
+        <KreirajPage/>
     </div>
 </template>

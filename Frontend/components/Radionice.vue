@@ -43,7 +43,6 @@
       }
     },
     mounted(){
-      this.generirajHeader();
       this.getRadionice();
     },
   
@@ -58,9 +57,6 @@
               else if(this.selectedButton == 2){if(vrijemeRadionice < lokalno)this.ispisiRadionicu(radionica);}
               else if(this.selectedButton == 3){if(radionica.IdKreatora == this.user.id)this.ispisiRadionicu(radionica);}
             })
-            axios.get("http://localhost:8000/Radionica/"+this.user.id).then(res =>{
-                  console.log(res);
-                })
           })
           
         }
@@ -71,14 +67,14 @@
       },
       async ispisiRadionicu(radionica){
         document.getElementById("tijelo1").appendChild(document.createElement("tr"));
-        document.getElementById("tijelo1").lastChild.innerHTML = `<td>${radionica.NazivRadionice}</td><td>${radionica.VoditeljRadionice}</td><td>${radionica.PrijaveDo}</td><td>${radionica.DatumPocetka}</td><td>${radionica.DatumZavrsetka}</td><td><button class='Buttoni' data-v-ea3ac3e9>Prijavi se</button></td>`;
-        if(radionica.IdKreatora == this.user.id){document.getElementById("tijelo1").lastChild.innerHTML += "<td><button class='Buttoni' data-v-ea3ac3e9>X</button></td>";
+        document.getElementById("tijelo1").lastChild.innerHTML = `<td>${radionica.NazivRadionice}</td><td>${radionica.VoditeljRadionice}</td><td>${radionica.PrijaveDo}</td><td>${radionica.DatumPocetka}</td><td>${radionica.DatumZavrsetka}</td><td><button class='Buttoni' data-v-bd5a589d>Prijavi se</button></td>`;
+        if(radionica.IdKreatora == this.user.id){document.getElementById("tijelo1").lastChild.innerHTML += "<td><button class='Buttoni' data-v-bd5a589d>X</button></td>";
         document.getElementById("tijelo1").lastChild.lastChild.previousSibling.firstChild.addEventListener("click", () => this.prijavi(radionica.id));
         document.getElementById("tijelo1").lastChild.lastChild.firstChild.addEventListener("click", () => this.izbrisi(radionica.id));}
         else document.getElementById("tijelo1").lastChild.lastChild.firstChild.addEventListener("click", () => this.prijavi(radionica.id));
       },
       async prijavi(id){
-        navigateTo('/opisprijave?id='+id);
+        navigateTo('/opisradionice?id='+id);
       },
       async izbrisi(id){
         if(confirm("Jeste li sigurni da želite izbrisati ovu radionicu?")){
@@ -101,43 +97,10 @@
           });
         }catch(error){console.log(error);}}
       },
-      async generirajHeader(){
-          try{
-            let{data} = await axios.get("http://localhost:8000/api/user");
-            this.user = data;
-            this.napraviHeader(data);
-          }
-          catch(error){
-            if(error.response.status == 401){
-              document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/login' class='navbar-item' data-v-a81738bd>Login</a>";
-              document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/login' class='mobile-nav-item' data-v-a81738bd>Login</a>";
-            }
-          }
-        },
-        async napraviHeader(data){
-          switch(data.vrstaKorisnika){
-            case 1:
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/korisnici' class='navbar-item' data-v-a81738bd>Korisnici</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/korisnici' class='mobile-nav-item' data-v-a81738bd>Korisnici</a>";
-            case 2:
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/create' class='navbar-item' data-v-a81738bd>Kreiraj</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/create' class='mobile-nav-item' data-v-a81738bd>Kreiraj</a>";
-            case 3:
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
-  
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
-  
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-            
-          }
-        },
-        showInfo(buttonNumber) {
-      this.selectedButton = buttonNumber;
-      document.getElementById("tijelo1").innerHTML = "";
-      this.getRadionice();
+      showInfo(buttonNumber) {
+        this.selectedButton = buttonNumber;
+        document.getElementById("tijelo1").innerHTML = "";
+        this.getRadionice();
       }
     },
       
@@ -149,7 +112,6 @@
   
     .forma {
       height: 100vh;
-      background-color: white;
       text-align: center;
     }
   

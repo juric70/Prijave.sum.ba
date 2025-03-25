@@ -3,6 +3,6 @@
 
 <template>
     <div>
-        <Korisnici></Korisnici>
+        <Korisnici/>
     </div>
 </template>

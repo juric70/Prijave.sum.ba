@@ -29,7 +29,6 @@ axios.defaults.withCredentials = true;
 export default {
   mounted(){
     this.getKorisnici();
-    this.generirajHeader();
   },
 
   methods: {
@@ -91,40 +90,7 @@ export default {
           alert("Stanje korisnika uspiješno promjenjeno!");
         })
       }catch(error){console.log(error);}
-    },
-    async generirajHeader(){
-        try{
-          let{data} = await axios.get("http://localhost:8000/api/user");
-          this.napraviHeader(data);
-        }
-        catch(error){
-          if(error.response.status == 401){
-            document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/login' class='navbar-item' data-v-a81738bd>Login</a>";
-            document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/login' class='mobile-nav-item' data-v-a81738bd>Login</a>";
-          }
-        }
-      },
-      async napraviHeader(data){
-        switch(data.vrstaKorisnika){
-          case 1:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/korisnici' class='navbar-item' data-v-a81738bd>Korisnici</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/korisnici' class='mobile-nav-item' data-v-a81738bd>Korisnici</a>";
-          case 2:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/create' class='navbar-item' data-v-a81738bd>Kreiraj</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/create' class='mobile-nav-item' data-v-a81738bd>Kreiraj</a>";
-          case 3:
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
-
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
-
-          document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-          document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-          
-        }
-      },
-    
+    },    
   }
 }
 
@@ -134,7 +100,6 @@ export default {
 
   .forma {
     height: 100vh;
-    background-color: white;
     text-align: center;
   }
 
