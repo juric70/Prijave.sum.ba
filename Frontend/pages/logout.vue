@@ -11,7 +11,7 @@ export default{
             try {
                 axios.post("http://localhost:8000/logout", {
                 }).then(res => {
-                navigateTo('/');
+                    location.href = '/';
             });
         }catch(error){console.log(error);}
     }
