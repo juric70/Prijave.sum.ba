@@ -2,6 +2,7 @@
   <div class="hero-image bg-[#e3e3e3] bg-cover bg-center h-[20rem] sm:h-[30rem]" style="background-image: url('https://static.vecteezy.com/system/resources/previews/018/994/847/non_2x/abstract-technology-futuristic-glowing-blue-and-red-light-lines-with-speed-motion-blur-effect-on-dark-blue-background-free-vector.jpg');">
     <div class="flex flex-col items-center justify-center h-full px-4 text-center">
       <h1 class="text-3xl sm:text-4xl font-bold text-[#094776]">Dobrodošli na PRIJAVE</h1>
+      <button @click="testfunc">TESTIRAJ</button>
       <p class="text-base sm:text-lg text-gray-700 mt-2 sm:mt-4">Ovo je samo placeholder za sliku</p>
     </div>
   </div>
@@ -222,6 +223,9 @@ export default {
     },
     showInfo(buttonNumber) {
       this.selectedButton = buttonNumber;
+    },
+    testfunc(){
+      location.href = '/';
     },
   }
 }

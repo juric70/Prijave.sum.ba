@@ -18,7 +18,7 @@ export default{
                     email: document.getElementById("email").value,
                     password: document.getElementById("password").value,
                 }).then(res => {
-                navigateTo('/');
+                    location.href = '/';
             });
         }catch(error){
             console.log(error);
