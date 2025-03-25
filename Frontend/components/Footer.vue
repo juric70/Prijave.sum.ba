@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer">
+    <footer class="footer bg-gradient-to-br from-[#094776] to-[#0a5992]">
       <div class="footer-section left">
         <p>
           Udruga Switch <br>
@@ -44,7 +44,6 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
-    background-color: #101D2F;
     color: white;
     padding: 20px;
     font-family: Arial, sans-serif;
