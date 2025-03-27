@@ -5,12 +5,12 @@
           <div class="dio">
            <p id="NazivRadionice"><h1 id="Naziv"></h1> </p>
            <p id="OpisRadionice"><h3 id="Opis"></h3> </p>
-    
+
            </div>
-          
-           
+
+
           <hr size="10" width="100%" color="white" />
-          
+
           <table class="dio" id="tijelo1">
           </table>
         </form>
@@ -21,7 +21,7 @@
   <script>
   import axios from 'axios';
   axios.defaults.withCredentials = true;
-  
+
   export default {
     mounted(){
       this.getRadionica();
@@ -37,7 +37,7 @@
         brojKorisnika: 0,
       }
     },
-  
+
     methods: {
       async getRadionica(){
         try{
@@ -101,13 +101,13 @@
             case 3:
             document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/prijave' class='navbar-item' data-v-a81738bd>Prijave</a>";
             document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/prijave' class='mobile-nav-item' data-v-a81738bd>Prijave</a>";
-  
+
             document.getElementsByClassName("navbar-end")[0].innerHTML += "<a href='/logout' class='navbar-item' data-v-a81738bd>Odjavi se</a>";
             document.getElementsByClassName("mobile-menu")[0].innerHTML += "<a href='/logout' class='mobile-nav-item' data-v-a81738bd>Odjavi se</a>";
-  
+
             document.getElementsByClassName("navbar-end")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
             document.getElementsByClassName("mobile-menu")[0].innerHTML += "<p class='navbar-item-dva' data-v-a81738bd>Pozdrav, " + data.name + "</p>";
-            
+
           }
         },
       ispisiPitanje(pitanje){
@@ -160,7 +160,7 @@
         }
         else if (pitanje.firstChild.id === "JedanOd") {
       let selectedValue = null;
-      
+
       Array.from(pitanje.childNodes).forEach(child => {
         if (child.tagName === "INPUT" && child.type === "radio" && child.checked) {
           selectedValue = child.value;
@@ -186,7 +186,7 @@
           selectedValues.push(child.value);
         }
       });
-  
+
       if (selectedValues.length > 0) {
         try {
           axios.post("http://localhost:8000/KorisnikPodatak", {
@@ -203,47 +203,47 @@
       }
     }
   }
-  
-  
+
+
   </script>
-  
+
   <style scoped>
-  
+
     .forma {
       height: 100vh;
       background-color: white;
       text-align: center;
     }
-  
+
     .hero-content {
       max-width: 800px;
     }
-  
+
     #Radionica {
       background-color: #014479;
       width: 60vw;
       position: relative;
       left: 20vw;
-      top: 5vw;  
+      top: 5vw;
       text-align: left;
       line-height: 4vh;
       font-size: 2vh;
       border-radius:16px;
     }
-  
+
     .dugiodgovor {
       width: auto;
       height: auto;
     }
-  
+
     .dio {
       padding: 20px 10px 5px 20px;
       border-radius: 8px;
     }
-  
+
     .textarea-custom-width {
       width: 50%;
-    } 
+    }
     .Buttoni {
     background-color: #101D2F;
     border-radius: 8px;
@@ -255,7 +255,7 @@
     cursor: pointer;
     text-align: center;
   }
-  
+
   .Buttoni:hover {
     background-color: #080f18;
   }
