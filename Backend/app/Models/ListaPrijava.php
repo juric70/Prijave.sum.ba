@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ListaPrijava extends Model
 {
-    protected $table = 'listaprijava';
+    protected $table = 'listaPrijava';
     use HasFactory;
 
     protected $fillable = [
