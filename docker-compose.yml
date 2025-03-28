@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: prijave-laravel
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: prijave
+      DB_USERNAME: prijave
+      DB_PASSWORD: prijave
+    networks:
+      - prijave-net
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: prijave-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: prijave
+      MYSQL_USER: prijave
+      MYSQL_PASSWORD: prijave
+      MYSQL_ROOT_PASSWORD: prijave
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - prijave-net
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: prijave-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - prijave-net
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  prijave-net:
