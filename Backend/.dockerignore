@@ -1,0 +1,27 @@
+# Ignore the vendor folder
+/vendor
+
+# Ignore node_modules
+/node_modules
+
+# Ignore compiled files
+/public/storage
+/storage/*.key
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+
+# Ignore environment files (but include .env)
+.env.*
+!.env
+
+# Ignore IDE and editor files
+/.idea
+/.vscode
+*.swp
+*.swo
+
+# Ignore system files
+.DS_Store
+Thumbs.db
