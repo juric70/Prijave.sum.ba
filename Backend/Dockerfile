@@ -21,11 +21,17 @@ COPY . .
 # Install PHP dependencies
 RUN composer install
 
-# Set permissions
-RUN chown -R 777 storage bootstrap/cache
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+# Make the script executable
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Expose the port
 EXPOSE 8000
 
 # Start the application
-CMD php artisan migrate --seed && php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan serve --host=0.0.0.0 --port=8000

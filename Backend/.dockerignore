@@ -25,3 +25,19 @@
 # Ignore system files
 .DS_Store
 Thumbs.db
+
+# Ignore PHPUnit cache
+.phpunit.cache
+**/.phpunit.result.cache
+
+# Ignore Homestead and authentication files
+**/Homestead.json
+**/Homestead.yaml
+**/auth.json
+
+# Ignore npm and yarn logs
+**/npm-debug.log
+**/yarn-error.log
+
+# Ignore Fleet files
+.fleet
