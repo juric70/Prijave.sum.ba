@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class korisnikPodatak extends Model
+class KorisnikPodatak extends Model
 {
     protected $table = 'korisnikpodatak';
     use HasFactory;
@@ -15,7 +15,8 @@ class korisnikPodatak extends Model
         'IdPrijave'
     ];
 
-    public function listaPrijava(){
-        return $this->belongsTo(listaPrijava::class);
+    public function listaPrijava()
+    {
+        return $this->belongsTo(ListaPrijava::class);
     }
 }

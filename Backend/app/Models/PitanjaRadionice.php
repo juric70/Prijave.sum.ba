@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pitanjaRadionice extends Model
+class PitanjaRadionice extends Model
 {
     protected $table = 'pitanjaradionice';
 
@@ -18,7 +18,8 @@ class pitanjaRadionice extends Model
         'radionice'
     ];
 
-    public function radionica(){
-        return $this->belongsTo(radionica::class);
+    public function radionica()
+    {
+        return $this->belongsTo(Radionica::class);
     }
 }
