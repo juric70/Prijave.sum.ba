@@ -15,10 +15,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy the application code
-COPY . .
+# Copy only composer files first to leverage Docker layer caching
+COPY composer.json composer.lock ./
 
 # Install PHP dependencies
+RUN composer install --no-scripts --no-dev --optimize-autoloader
+
+# Copy the rest of the application code
+COPY . .
+
+# Run composer scripts after copying the application code
 RUN composer install
 
 # Copy the entrypoint script
