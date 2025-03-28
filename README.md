@@ -96,7 +96,15 @@ Možete koristiti Docker tokom developmenta. Ovo je korisno ako netko želi radi
 	<summary><strong>Primjer 1</strong>: želite raditi na frontendu, no za njega vam treba biti pokrenut cijeli backend.</summary>
 	
 Otvorite dodatni VS Code prozor u folderu "Backend" i pokrenete sljedeće naredbe:
-1. Startanje MySQL baze:
+
+1. Stvaranje Docker mreže:
+
+```bash
+docker network create prijave-net
+```
+
+2. Startanje MySQL baze:
+
 ```bash
 docker run -d
 --name prijave-mysql
@@ -109,12 +117,14 @@ docker run -d
 -v mysql_data:/var/lib/mysql
 mysql:latest
 ```
-2. Kompajliranje backenda:
+
+3. Kompajliranje backenda:
+
 ```bash
 docker build -t prijave-laravel .
 ```
 
-3. Pokretanje backenda:
+4. Pokretanje backenda:
 
 ```bash
 docker run -d
