@@ -1,46 +1,94 @@
 <template>
   <div class="flex flex-col">
-    <div class="mx-auto my-4 flex items-center gap-4">
-      <button
-        class="rounded-lg p-2 text-white transition-colors"
-        :class="{
-          'bg-[#D22D3A]': currentFilter === 'open',
-          'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'open',
-        }"
-        @click="currentFilter = 'open'">
-        Otvorene
-      </button>
-      <button
-        class="rounded-lg p-2 text-white transition-colors"
-        :class="{
-          'bg-[#D22D3A]': currentFilter === 'closer',
-          'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'closer',
-        }"
-        @click="currentFilter = 'closer'">
-        Zatvorene
-      </button>
-      <button
-        class="rounded-lg p-2 text-white transition-colors"
-        :class="{
-          'bg-[#D22D3A]': currentFilter === 'my',
-          'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'my',
-        }"
-        @click="currentFilter = 'my'">
-        Moje
-      </button>
+    <div class="flex flex-col gap-4 py-8">
+      <div class="mx-auto flex items-center gap-4">
+        <button
+          class="rounded-lg p-2 text-white transition-colors"
+          :class="{
+            'bg-[#D22D3A]': currentFilter === 'open',
+            'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'open',
+          }"
+          @click="currentFilter = 'open'">
+          Otvorene
+        </button>
+        <button
+          class="rounded-lg p-2 text-white transition-colors"
+          :class="{
+            'bg-[#D22D3A]': currentFilter === 'closed',
+            'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'closed',
+          }"
+          @click="currentFilter = 'closed'">
+          Zatvorene
+        </button>
+        <button
+          class="rounded-lg p-2 text-white transition-colors"
+          :class="{
+            'bg-[#D22D3A]': currentFilter === 'my',
+            'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'my',
+          }"
+          @click="currentFilter = 'my'">
+          Moje
+        </button>
+      </div>
+      <div
+        class="flex flex-col items-center"
+        v-if="radionice">
+        <div class="mx-auto flex items-center gap-4">
+          <button
+            class="ml-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
+            :class="{
+              'bg-[#D22D3A]': currentPage > 1,
+              'bg-transparent hover:bg-[#D22D3A88]': currentPage <= 1,
+            }"
+            @click="currentPage--"
+            :disabled="currentPage <= 1">
+            <ArrowLeft />
+          </button>
+          <span class="text-lg font-bold text-[#094776]">
+            {{ currentPage }}
+          </span>
+          <button
+            class="mr-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
+            :class="{
+              'bg-[#D22D3A]':
+                currentPage < Math.ceil(totalItems / itemsPerPage),
+              'bg-transparent hover:bg-[#D22D3A88]':
+                currentPage >= Math.ceil(totalItems / itemsPerPage),
+            }"
+            @click="currentPage++"
+            :disabled="currentPage >= Math.ceil(totalItems / itemsPerPage)">
+            <ArrowRight />
+          </button>
+        </div>
+        <span class="text-lg font-bold text-[#094776]">
+          Prikazano {{ (currentPage - 1) * itemsPerPage + 1 }} -
+          {{ Math.min(currentPage * itemsPerPage, totalItems) }} od
+          {{ totalItems }} radionica
+        </span>
+      </div>
     </div>
 
     <div
-      class="mx-8 flex flex-col gap-8"
+      class="mx-8 my-8 mt-0 flex flex-col gap-4 rounded-md"
       v-if="radionice">
+      <span
+        class="text-xl font-bold text-[#094776]"
+        v-if="radionice.length === 0">
+        Nema radionica koje odgovaraju odabranom filtru.
+      </span>
       <div
-        class="flex rounded-lg bg-white py-8"
-        v-for="radionica in radionice"
+        class="flex rounded-lg bg-white p-4"
+        v-for="(radionica, i) in radionice"
         :key="radionica.id">
         <div
-          class="min-w-[100px] max-w-[150px] flex-1 rounded-br-md rounded-tr-md bg-gradient-to-b from-[#D22D3A] to-[#004371]"></div>
+          class="min-w-[100px] max-w-[150px] flex-1 rounded-md bg-gradient-to-b"
+          :class="
+            i % 2 === 0
+              ? 'from-[#D22D3A] to-[#71344F]'
+              : 'from-[#71344F] to-[#143E69]'
+          "></div>
         <div
-          class="mx-8 my-4 flex w-full flex-col gap-8 border-b-2 border-t-2 border-[#094776] pb-16 pt-4">
+          class="mx-8 my-4 flex w-full flex-col gap-8 border-b-2 border-t-2 border-[#094776] pb-4 pl-2 pt-8">
           <span class="font-bold text-[#1E1E1E]">
             <span class="text-[#094776]">Naziv radionice:</span>
             {{ radionica.NazivRadionice }}
@@ -65,6 +113,11 @@
             <span class="text-[#094776]">Opis:</span>
             {{ radionica.OpisRadionice }}
           </span>
+          <button
+            class="ml-auto rounded-lg bg-[#D22D3A] p-2 px-6 text-white transition-colors hover:bg-red-800"
+            v-if="new Date(radionica.DatumZavrsetka) > new Date()">
+            Prijavi se
+          </button>
         </div>
       </div>
     </div>
@@ -73,52 +126,61 @@
 
 <script lang="ts">
 import axios from "axios";
+import type PaginatedResult from "~/lib/types/PaginatedResult";
 import type Radionica from "~/lib/types/Radionica";
-import type User from "~/lib/types/User";
+import ArrowLeft from "~/assets/icons/arrow-left.svg?component";
+import ArrowRight from "~/assets/icons/arrow-right.svg?component";
 axios.defaults.withCredentials = true;
 
 export default {
   data(): {
-    user: User | null;
+    currentPage: number;
+    itemsPerPage: number;
+    totalItems: number;
     radionice: Radionica[] | null;
-    currentFilter: "open" | "closer" | "my";
+    currentFilter: "open" | "closed" | "my";
   } {
     return {
+      currentPage: 1,
+      itemsPerPage: 6,
+      totalItems: 0,
       currentFilter: "open",
       radionice: null,
-      user: null,
     };
   },
   mounted() {
     this.getRadionice();
-    this.getUserData();
   },
-
-  methods: {
-    async getUserData() {
-      try {
-        const userResponse = (await axios.get("http://localhost:8000/User/me"))
-          .data as User;
-
-        this.user = userResponse;
-      } catch (error) {
-        console.log(error);
+  watch: {
+    currentPage() {
+      this.getRadionice();
+    },
+    // warning: brain rot ahead
+    currentFilter() {
+      // promjeni stranicu na 1 ili refreshaj
+      // ako se stranica promjeni na 1 onda ce se triggerati gornji currentPage watcher pa nema potrebe rucno refreshati
+      if (this.currentPage > 1) {
+        this.currentPage = 1;
+      } else {
+        this.getRadionice();
       }
     },
+  },
+  methods: {
     async getRadionice() {
       try {
-        const radionice = (await axios.get("http://localhost:8000/Radionica"))
-          .data as Radionica[];
+        const radionice = (
+          await axios.get("http://localhost:8000/Radionica", {
+            params: {
+              currentPage: this.currentPage,
+              itemsPerPage: this.itemsPerPage,
+              filter: this.currentFilter,
+            },
+          })
+        ).data as PaginatedResult<Radionica>;
 
-        this.radionice = radionice.filter(radionica => {
-          const datumZavrsetka = new Date(radionica.DatumZavrsetka);
-          const trenutniDatum = new Date();
-          if (datumZavrsetka < trenutniDatum) {
-            return false;
-          }
-
-          return true;
-        });
+        this.radionice = radionice.data;
+        this.totalItems = radionice.total;
       } catch (error) {
         console.log(error);
       }
@@ -174,6 +236,10 @@ export default {
         }
       }
     },
+  },
+  components: {
+    ArrowLeft,
+    ArrowRight,
   },
 };
 </script>
