@@ -40,6 +40,7 @@
             'bg-[#D22D3A]': currentFilter === 'my',
             'bg-transparent hover:bg-[#D22D3A88]': currentFilter !== 'my',
           }"
+          v-if="user"
           @click="currentFilter = 'my'">
           Moje
         </button>
@@ -65,7 +66,13 @@
               : 'from-[#71344F] to-[#143E69]'
           "></div>
         <div
-          class="mx-8 my-4 flex w-full flex-col gap-8 border-b-2 border-t-2 border-[#094776] pb-4 pl-2 pt-8">
+          class="relative mx-8 my-4 flex w-full flex-col gap-8 border-b-2 border-t-2 border-[#094776] pb-4 pl-2 pt-8">
+          <button
+            class="absolute right-0 top-0 fill-[#D22D3A] p-2 hover:fill-red-800"
+            v-if="radionica.IdKreatora === user?.id"
+            @click="izbrisi(radionica.id)">
+            <Delete class="h-6 w-6" />
+          </button>
           <span class="font-bold text-[#1E1E1E]">
             <span class="text-[#094776]">Naziv radionice:</span>
             {{ radionica.NazivRadionice }}
@@ -90,11 +97,12 @@
             <span class="text-[#094776]">Opis:</span>
             {{ radionica.OpisRadionice }}
           </span>
-          <button
+          <NuxtLink
+            :to="`/opisradionice?id=${radionica.id}`"
             class="ml-auto rounded-lg bg-[#D22D3A] p-2 px-6 text-white transition-colors hover:bg-red-800"
             v-if="new Date(radionica.DatumZavrsetka) > new Date()">
             Prijavi se
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -142,6 +150,8 @@ import type PaginatedResult from "~/lib/types/PaginatedResult";
 import type Radionica from "~/lib/types/Radionica";
 import ArrowLeft from "~/assets/icons/arrow-left.svg?component";
 import ArrowRight from "~/assets/icons/arrow-right.svg?component";
+import Delete from "~/assets/icons/delete.svg?component";
+import type User from "~/lib/types/User";
 axios.defaults.withCredentials = true;
 
 export default {
@@ -152,6 +162,7 @@ export default {
     radionice: Radionica[] | null;
     currentFilter: "open" | "closed" | "my";
     searchQuery: string;
+    user: User | null;
   } {
     return {
       currentPage: 1,
@@ -160,10 +171,12 @@ export default {
       currentFilter: "open",
       radionice: null,
       searchQuery: "",
+      user: null,
     };
   },
   mounted() {
     this.getRadionice();
+    this.getUser();
   },
   watch: {
     currentPage() {
@@ -200,6 +213,15 @@ export default {
         console.log(error);
         this.radionice = [];
         this.totalItems = 0;
+      }
+    },
+    async getUser() {
+      try {
+        const user = (await axios.get("http://localhost:8000/User/me"))
+          .data as User;
+        this.user = user;
+      } catch (error) {
+        console.log(error);
       }
     },
     async prijavi(id: number) {
@@ -257,6 +279,7 @@ export default {
   components: {
     ArrowLeft,
     ArrowRight,
+    Delete,
   },
 };
 </script>
