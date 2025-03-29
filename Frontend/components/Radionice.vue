@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col">
-    <div class="mx-4 flex flex-col gap-4 py-4 md:mx-8">
+  <div class="mx-4 flex flex-col pt-4 md:mx-8 xl:mx-32 xl:p-8">
+    <div class="flex flex-col gap-4 pb-4 xl:pb-8">
       <form
         class="mx-auto flex w-full max-w-sm items-center gap-4"
         @submit.prevent="getRadionice">
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div
-      class="mx-4 my-8 mt-0 flex flex-col gap-4 rounded-md md:mx-8"
+      class="my-8 mt-0 flex flex-col gap-4 rounded-md"
       v-if="radionice">
       <span
         class="rounded-md bg-white p-4 text-xl font-bold text-[#094776]"
