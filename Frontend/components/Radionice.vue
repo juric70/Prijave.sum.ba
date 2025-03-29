@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex flex-col gap-4 py-4">
+    <div class="mx-4 flex flex-col gap-4 py-4 md:mx-8">
       <form
         class="mx-auto flex w-full max-w-sm items-center gap-4"
         @submit.prevent="getRadionice">
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div
-      class="mx-8 my-8 mt-0 flex flex-col gap-4 rounded-md"
+      class="mx-4 my-8 mt-0 flex flex-col gap-4 rounded-md md:mx-8"
       v-if="radionice">
       <span
         class="rounded-md bg-white p-4 text-xl font-bold text-[#094776]"
@@ -55,18 +55,18 @@
         Nema radionica koje odgovaraju odabranom filtru.
       </span>
       <div
-        class="flex rounded-lg bg-white p-4"
+        class="flex flex-col rounded-lg bg-white p-4 md:flex-row"
         v-for="(radionica, i) in radionice"
         :key="radionica.id">
         <div
-          class="min-w-[100px] max-w-[150px] flex-1 rounded-md bg-gradient-to-b"
+          class="h-[100px] w-full min-w-[100px] rounded-md bg-gradient-to-r md:h-auto md:max-w-[150px] md:flex-1 md:bg-gradient-to-b"
           :class="
             i % 2 === 0
               ? 'from-[#D22D3A] to-[#71344F]'
               : 'from-[#71344F] to-[#143E69]'
           "></div>
         <div
-          class="relative mx-8 my-4 flex w-full flex-col gap-8 border-b-2 border-t-2 border-[#094776] pb-4 pl-2 pt-8">
+          class="relative my-4 flex flex-col gap-4 border-b-2 border-t-2 border-[#094776] pb-4 pt-8 md:ml-8 md:w-full md:gap-8 md:pl-2">
           <button
             class="absolute right-0 top-0 fill-[#D22D3A] p-2 hover:fill-red-800"
             v-if="radionica.IdKreatora === user?.id"
