@@ -11,10 +11,9 @@ services:
       DB_DATABASE: prijave
       DB_USERNAME: prijave
       DB_PASSWORD: prijave
-    networks:
-      - prijave-net
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   mysql:
     image: mysql:8.0
@@ -26,10 +25,23 @@ services:
       MYSQL_USER: prijave
       MYSQL_PASSWORD: prijave
       MYSQL_ROOT_PASSWORD: prijave
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pprijave",
+        ]
+      timeout: 20s
+      retries: 10
+      interval: 5s
     volumes:
       - mysql_data:/var/lib/mysql
-    networks:
-      - prijave-net
 
   frontend:
     build:
@@ -38,13 +50,8 @@ services:
     container_name: prijave-frontend
     ports:
       - "3000:3000"
-    networks:
-      - prijave-net
     depends_on:
       - backend
 
 volumes:
   mysql_data:
-
-networks:
-  prijave-net:

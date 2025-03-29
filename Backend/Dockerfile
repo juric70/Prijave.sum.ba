@@ -1,8 +1,5 @@
 FROM php:8.2-cli
 
-# Set environment variables
-ENV USING_DOCKER=true
-
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
 	unzip \
