@@ -22,9 +22,9 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::controller(PitanjaRadioniceController::class)->group(function (){
+Route::controller(PitanjaRadioniceController::class)->group(function () {
     Route::get('/pitanjaRadionice', 'index');
     Route::post('/pitanjaRadionice', 'store');
     Route::get('/pitanjaRadionice/{id}', 'show');
@@ -33,14 +33,14 @@ Route::controller(PitanjaRadioniceController::class)->group(function (){
 });
 
 
-Route::controller(RadionicaController::class)->group(function (){
+Route::controller(RadionicaController::class)->group(function () {
     Route::get('/Radionica', 'index');
     Route::post('/Radionica', 'store');
     Route::get('/Radionica/{id}', 'show');
     Route::delete('/Radionica/{id}', 'destroy');
 });
 
-Route::controller(ListaPrijavaController::class)->group(function (){
+Route::controller(ListaPrijavaController::class)->group(function () {
     Route::get('/ListaPrijava', 'index');
     Route::post('/ListaPrijava', 'store');
     Route::get('/ListaPrijava/{id}', 'show');
@@ -49,7 +49,7 @@ Route::controller(ListaPrijavaController::class)->group(function (){
     Route::get('/PrijaveKorisnika/{IdKreatora}', 'prijaveKorisnika');
 });
 
-Route::controller(KorisnikPodatakController::class)->group(function (){
+Route::controller(KorisnikPodatakController::class)->group(function () {
     Route::get('/KorisnikPodatak', 'index');
     Route::post('/KorisnikPodatak', 'store');
     Route::get('/KorisnikPodatak/{id}', 'show');
@@ -62,7 +62,8 @@ Route::post('/promjeniVrstu/{id}', [RegisteredUserController::class, 'promjeni']
 Route::get('/prikaziKorisnika/{id}', [RegisteredUserController::class, 'show']);
 
 
-Route::controller(UserController::class)->group(function (){
+Route::controller(UserController::class)->group(function () {
     Route::get('/User', 'index');
-    Route::get('/User/{id}','show');
+    Route::get('/User/me', 'getMe')->middleware('auth:sanctum');
+    Route::get('/User/{id}', 'show');
 });
