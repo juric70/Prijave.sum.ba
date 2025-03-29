@@ -75,8 +75,6 @@ Zatim pozovite naredbe: `git add .`, `git commit -m "Opišite šta ste promjenil
 
 Docker je program koji je koristan ako želite pokrenuti cijeli projekt ili dio njega bez potrebe za instalacijom ikakvih dodatnih programa kao što su PHP, Composer, NodeJS, Laravel, Laragon, MySQL... nego je sve dostupno putem jedne naredbe koja instalira pakete, postavi projekt, te pokrene ga. Ideja je da sve ispravno radi na svakom uređaju bez obzira na stvari poput OS-a, verzije programa, itd.
 
-To je korisno u slučaju da želite pokrenuti projekt na lagan način na drugom računalu ili pri deploymentu projekta na neki server.
-
 ### Upute za pokretanje
 
 Ako želite pokrenuti cijeli projekt kroz Docker, prvo preuzmite [Docker Desktop](https://www.docker.com/products/docker-desktop/), odnosno [Docker Engine](https://docs.docker.com/engine/install/) ako koristite Linux.
@@ -85,83 +83,20 @@ Nakon što se instalira, bit će dostupne komande `docker` i `docker-compose` u 
 
 Ako je sve u redu, preuzmite projekt sa git-a, uđite u njega putem `cd` komande, te upišite: `docker-compose up -d --build`
 
-Pošto postoje neke pozadinske operacije poput migriranja i seedanja baze podataka u backendu, potrebno je malo pričekati.
 Nakon nekih 5-10 sekundi, možete pristupiti aplikaciji na `http://localhost:3000` i backendu na `http://localhost:8000`, a MySQL baza će također biti dostupna na portu 3306 pa se možete na nju spojiti kako god hoćete.
 
 ### Razvoj koristeći Docker
 
-Možete koristiti Docker tokom developmenta. Ovo je korisno ako netko želi raditi samo na jednom dijelu projekta npr. samo na frontendu, a da se ne mora zamarati sa instaliranjem PHP-a i MySQL-a.
+Korištenje Dockera tokom razvoja je korisno ako npr. radite na frontendu a ne želite se zamarati sa instaliranjem PHP-a i MySQL-a.
 
-<details>
-	<summary><strong>Primjer 1</strong>: želite raditi na frontendu, no za njega vam treba biti pokrenut cijeli backend.</summary>
-	
-Otvorite dodatni VS Code prozor u folderu "Backend" i pokrenete sljedeće naredbe:
+Docker je napravljen tako da se mogu pokretati pojedinačni dijelovi projekta, bez potrebe pokretanja ostalih. Trenutni dijelovi projekta su `frontend`, `backend` i `mysql`. Pokrenete samo ono što vam treba, pa možete raditi na svom kodu na standardni način.
 
-1. Stvaranje Docker mreže:
+Primjeri:
 
-```bash
-docker network create prijave-net
-```
+1. Želite raditi na frontendu ali ne želite instalirati dependencies za backend:
 
-2. Startanje MySQL baze:
+Komanda za pokretanje backenda je `docker-compose up -d --build backend mysql` (ova komanda mora biti pokrenuta u root folderu odnosno tamo gdje se nalazi `docker-compose.yml`). Nakon toga, možete raditi na frontendu koristeći standardne komande (Unutar `Frontend/` foldera koristite komande `npm run dev`, `npm run build`, itd.).
 
-```bash
-docker run -d \
---name prijave-mysql \
---network prijave-net \
--e MYSQL_ROOT_PASSWORD=prijave \
--e MYSQL_DATABASE=prijave \
--e MYSQL_USER=prijave \
--e MYSQL_PASSWORD=prijave \
--p 3306:3306 \
--v mysql_data:/var/lib/mysql \
-mysql:latest
-```
+2. Želite raditi na backendu ali ne želite imati instaliran MySQL server na svom računalu:
 
-3. Kompajliranje backenda:
-
-```bash
-docker build -t prijave-laravel .
-```
-
-4. Pokretanje backenda:
-
-```bash
-docker run -d \
---name prijave-laravel \
---network prijave-net \
--p 8000:8000 \
-prijave-laravel
-```
-
-Nakon toga, backend bi vam trebao biti dostupan na `http://localhost:8000`.
-
-</details>
-
-<details>
-	<summary>
-	<strong>Primjer 2</strong>: želite raditi na backendu, no za njega vam treba biti pokrenuta MySQL baza podataka.</summary>
-	</summary>
-
-Unutar VS Code terminala (pretpostaljam da ste u folderu "Backend") pokrenete sljedeću naredbu:
-
-1. Startanje MySQL baze:
-
-```bash
-docker run -d \
---name prijave-mysql \
---network prijave-net \
--e MYSQL_ROOT_PASSWORD=prijave \
--e MYSQL_DATABASE=prijave \
--e MYSQL_USER=prijave \
--e MYSQL_PASSWORD=prijave \
--p 3306:3306 \
--v mysql_data:/var/lib/mysql \
-mysql:latest
-```
-
-MySQL baza će biti dostupna na `127.0.0.1:3306`.
-
-Backend zatim možete pokrenuti na način koji vam odgovara, bilo da je to preko terminala, Laragona ili Docker-a, i trebao bi se spojiti na MySQL bazu ispravno.
-
-</details>
+Komanda za pokretanje baze podataka je `docker-compose up -d mysql` (ova komanda mora biti pokrenuta u root folderu odnosno tamo gdje se nalazi `docker-compose.yml`). Nakon toga, možete raditi na backendu koristeći standardne komande (Unutar `Backend/` foldera koristite komande `php artisan serve`, `php artisan migrate`, itd.). Ako želite pokrenuti i frontend, možete koristiti `docker-compose up -d frontend` (opet u root folderu).
