@@ -16,6 +16,11 @@ class RadionicaController extends Controller
             $currentPage = $request->input('currentPage', 1);
             $itemsPerPage = $request->input('itemsPerPage', 10);
             $filter = $request->input('filter', 'open');
+            $search = $request->input('search', '');
+
+            if ($filter === 'my' && !auth()->check()) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
 
             $podaci = Radionica::query()
                 ->when($filter === 'open', function ($query) {
@@ -27,6 +32,11 @@ class RadionicaController extends Controller
                 ->when($filter === 'my', function ($query) {
                     return $query->where('IdKreatora', auth()->user()->id);
                 })
+                ->when($search, function ($query) use ($search) {
+                    return $query->where('NazivRadionice', 'like', '%' . $search . '%')
+                        ->orWhere('OpisRadionice', 'like', '%' . $search . '%');
+                })
+
                 ->orderBy('DatumPocetka', 'asc')
                 ->paginate($itemsPerPage, ['*'], 'page', $currentPage);
             return response()->json($podaci);

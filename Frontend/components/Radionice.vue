@@ -1,6 +1,20 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex flex-col gap-4 py-8">
+    <div class="flex flex-col gap-4 py-4">
+      <form
+        class="mx-auto flex w-full max-w-sm items-center gap-4"
+        @submit.prevent="getRadionice">
+        <input
+          type="text"
+          class="mx-auto w-full rounded-lg border-2 border-[#094776] bg-white p-2 text-[#094776] focus:border-[#D22D3A] focus:outline-none"
+          placeholder="Pretraži radionice"
+          v-model="searchQuery" />
+        <button
+          class="rounded-lg bg-[#D22D3A] p-2 px-6 text-white transition-colors hover:bg-red-800"
+          @click="getRadionice">
+          Pretraži
+        </button>
+      </form>
       <div class="mx-auto flex items-center gap-4">
         <button
           class="rounded-lg p-2 text-white transition-colors"
@@ -30,49 +44,12 @@
           Moje
         </button>
       </div>
-      <div
-        class="flex flex-col items-center"
-        v-if="radionice">
-        <div class="mx-auto flex items-center gap-4">
-          <button
-            class="ml-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
-            :class="{
-              'bg-[#D22D3A]': currentPage > 1,
-              'bg-transparent hover:bg-[#D22D3A88]': currentPage <= 1,
-            }"
-            @click="currentPage--"
-            :disabled="currentPage <= 1">
-            <ArrowLeft />
-          </button>
-          <span class="text-lg font-bold text-[#094776]">
-            {{ currentPage }}
-          </span>
-          <button
-            class="mr-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
-            :class="{
-              'bg-[#D22D3A]':
-                currentPage < Math.ceil(totalItems / itemsPerPage),
-              'bg-transparent hover:bg-[#D22D3A88]':
-                currentPage >= Math.ceil(totalItems / itemsPerPage),
-            }"
-            @click="currentPage++"
-            :disabled="currentPage >= Math.ceil(totalItems / itemsPerPage)">
-            <ArrowRight />
-          </button>
-        </div>
-        <span class="text-lg font-bold text-[#094776]">
-          Prikazano {{ (currentPage - 1) * itemsPerPage + 1 }} -
-          {{ Math.min(currentPage * itemsPerPage, totalItems) }} od
-          {{ totalItems }} radionica
-        </span>
-      </div>
     </div>
-
     <div
       class="mx-8 my-8 mt-0 flex flex-col gap-4 rounded-md"
       v-if="radionice">
       <span
-        class="text-xl font-bold text-[#094776]"
+        class="rounded-md bg-white p-4 text-xl font-bold text-[#094776]"
         v-if="radionice.length === 0">
         Nema radionica koje odgovaraju odabranom filtru.
       </span>
@@ -121,6 +98,41 @@
         </div>
       </div>
     </div>
+    <div
+      class="mb-16 mt-8 flex flex-col items-center"
+      v-if="radionice">
+      <div class="mx-auto flex items-center gap-4">
+        <button
+          class="ml-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
+          :class="{
+            'bg-[#D22D3A]': currentPage > 1,
+            'bg-transparent hover:bg-[#D22D3A88]': currentPage <= 1,
+          }"
+          @click="currentPage--"
+          :disabled="currentPage <= 1">
+          <ArrowLeft />
+        </button>
+        <span class="text-lg font-bold text-white">
+          {{ currentPage }}
+        </span>
+        <button
+          class="mr-auto rounded-lg p-2 text-white transition-colors disabled:opacity-50"
+          :class="{
+            'bg-[#D22D3A]': currentPage < Math.ceil(totalItems / itemsPerPage),
+            'bg-transparent hover:bg-[#D22D3A88]':
+              currentPage >= Math.ceil(totalItems / itemsPerPage),
+          }"
+          @click="currentPage++"
+          :disabled="currentPage >= Math.ceil(totalItems / itemsPerPage)">
+          <ArrowRight />
+        </button>
+      </div>
+      <span class="text-lg font-bold text-white">
+        Prikazano {{ (currentPage - 1) * itemsPerPage + 1 }} -
+        {{ Math.min(currentPage * itemsPerPage, totalItems) }} od
+        {{ totalItems }} radionica
+      </span>
+    </div>
   </div>
 </template>
 
@@ -139,6 +151,7 @@ export default {
     totalItems: number;
     radionice: Radionica[] | null;
     currentFilter: "open" | "closed" | "my";
+    searchQuery: string;
   } {
     return {
       currentPage: 1,
@@ -146,6 +159,7 @@ export default {
       totalItems: 0,
       currentFilter: "open",
       radionice: null,
+      searchQuery: "",
     };
   },
   mounted() {
@@ -175,6 +189,7 @@ export default {
               currentPage: this.currentPage,
               itemsPerPage: this.itemsPerPage,
               filter: this.currentFilter,
+              search: this.searchQuery,
             },
           })
         ).data as PaginatedResult<Radionica>;
@@ -183,6 +198,8 @@ export default {
         this.totalItems = radionice.total;
       } catch (error) {
         console.log(error);
+        this.radionice = [];
+        this.totalItems = 0;
       }
     },
     async prijavi(id: number) {
