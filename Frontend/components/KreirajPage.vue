@@ -1,28 +1,82 @@
 <template>
   <section class="hero">
-    <h1> Napravite novu radionicu </h1>
+    <h1>Napravite novu radionicu</h1>
     <div class="hero-content">
-      <form id="Radionica" @submit.prevent="submitForm">
-        <h2> Osnovne informacije o prijavi: </h2>
-        <p id="NazivPrijave">Naziv vaše prijave: <input type="text" placeholder="Unesite naziv..." /></p>
-        <p id="DodatneInfo">Dodatne informacije o prijavi: <input type="text" placeholder="Unesite opis..." /></p>
-        <p id="Voditelj">Ime i prezime voditelja: <input type="text" placeholder="Unesite voditelja..." /></p>
-        <p id="Pocetak">Datum početka: <input class="date" type="date" id="DatPoc"/></p>
-        <p id="Zavrsetak">Datum završetka: <input class="date" type="date" id="DatKraj"/></p>
-        <p id="RokPrijava">Rok za prijave: <input class="date" type="datetime-local" id="DatPrij"/></p>
-        <h2 id="NaslovListe"> Lista pitanja za prijavu: </h2>
-          <div class="flex-div">
-            <input type='text' class='dugiteksti' placeholder='Unesite naziv pitanja...' />
-            <select class='VrstePitanja' @change='promjenaVrste'>
-              <option value='KratkiOdgovor'> Kratki Odgovor </option>
-              <option value='ViseTocnih'> Vise Tocnih </option>
-              <option value='JedanOd'> Jedan Od </option>
-            </select>
-            <button class="Closer" @click="Destroying">X</button>
-          </div>
-        <div class="btn-div" id="buttoni">
-          <button class="Buttoni" @click="NoviDiv">Dodaj još jedno pitanje</button>
-          <button class="Buttoni" @click='Submitting'>Napravi prijavu</button>
+      <form
+        id="Radionica"
+        @submit.prevent="submitForm">
+        <h2>Osnovne informacije o prijavi:</h2>
+        <p id="NazivPrijave">
+          Naziv vaše prijave:
+          <input
+            type="text"
+            placeholder="Unesite naziv..." />
+        </p>
+        <p id="DodatneInfo">
+          Dodatne informacije o prijavi:
+          <input
+            type="text"
+            placeholder="Unesite opis..." />
+        </p>
+        <p id="Voditelj">
+          Ime i prezime voditelja:
+          <input
+            type="text"
+            placeholder="Unesite voditelja..." />
+        </p>
+        <p id="Pocetak">
+          Datum početka:
+          <input
+            class="date"
+            type="date"
+            id="DatPoc" />
+        </p>
+        <p id="Zavrsetak">
+          Datum završetka:
+          <input
+            class="date"
+            type="date"
+            id="DatKraj" />
+        </p>
+        <p id="RokPrijava">
+          Rok za prijave:
+          <input
+            class="date"
+            type="datetime-local"
+            id="DatPrij" />
+        </p>
+        <h2 id="NaslovListe">Lista pitanja za prijavu:</h2>
+        <div class="flex-div">
+          <input
+            type="text"
+            class="dugiteksti"
+            placeholder="Unesite naziv pitanja..." />
+          <select
+            class="VrstePitanja"
+            @change="promjenaVrste">
+            <option value="KratkiOdgovor">Kratki Odgovor</option>
+            <option value="ViseTocnih">Vise Tocnih</option>
+            <option value="JedanOd">Jedan Od</option>
+          </select>
+          <button
+            class="Closer"
+            @click="Destroying">
+            X
+          </button>
+        </div>
+        <div
+          class="btn-div"
+          id="buttoni">
+          <button
+            class="Buttoni"
+            @click="NoviDiv">
+            Dodaj još jedno pitanje
+          </button>
+          <button
+            class="Buttoni"
+            @click="Submitting">
+            Napravi prijavu
+          </button>
         </div>
       </form>
     </div>
@@ -30,7 +84,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 axios.defaults.withCredentials = true;
 
 export default {
@@ -41,8 +95,7 @@ export default {
       User: [],
     };
   },
-  mounted(){
-  },
+  mounted() {},
   methods: {
     promjenaVrste(event) {
       let e = event.target.parentNode;
@@ -51,68 +104,68 @@ export default {
         e.removeChild(child);
         child = e.childNodes[3];
       }
-      if ((event.target.value == "JedanOd") || (event.target.value == "ViseTocnih")) {
+      if (
+        event.target.value == "JedanOd" ||
+        event.target.value == "ViseTocnih"
+      ) {
         this.dodajOpciju(e);
       }
     },
 
-
-
     dodajOpciju(e) {
       let pom = e.appendChild(document.createElement("div"));
       pom.appendChild(document.createTextNode("Opcija: "));
-      let dodajInput = document.createElement("input")
-      dodajInput.style.backgroundColor = 'transparent'
-      dodajInput.style.width = 'calc(40% - 20px)'
-      dodajInput.style.padding = '10px'
-      dodajInput.style.margin = '10px 0'
-      dodajInput.style.border = 'none'
-      dodajInput.style.borderBottom = '1px solid grey'
-      dodajInput.style.transition = 'all 0.3s ease'
-      dodajInput.style.color = 'white'
+      let dodajInput = document.createElement("input");
+      dodajInput.style.backgroundColor = "transparent";
+      dodajInput.style.width = "calc(40% - 20px)";
+      dodajInput.style.padding = "10px";
+      dodajInput.style.margin = "10px 0";
+      dodajInput.style.border = "none";
+      dodajInput.style.borderBottom = "1px solid grey";
+      dodajInput.style.transition = "all 0.3s ease";
+      dodajInput.style.color = "white";
       pom.appendChild(dodajInput);
-      let dodajButton2 = document.createElement('button')
-      dodajButton2.style.backgroundColor = 'transparent'
-      dodajButton2.style.borderRadius = '8px'
-      dodajButton2.style.padding = '5px 10px'
-      dodajButton2.style.margin = '10px 10px'
-      dodajButton2.style.border = '1px solid white'
-      dodajButton2.style.transition = 'all 0.3s ease'
-      dodajButton2.style.color = 'white'
-      dodajButton2.style.cursor = 'pointer'
-      dodajButton2.style.textAlign = 'center'
+      let dodajButton2 = document.createElement("button");
+      dodajButton2.style.backgroundColor = "transparent";
+      dodajButton2.style.borderRadius = "8px";
+      dodajButton2.style.padding = "5px 10px";
+      dodajButton2.style.margin = "10px 10px";
+      dodajButton2.style.border = "1px solid white";
+      dodajButton2.style.transition = "all 0.3s ease";
+      dodajButton2.style.color = "white";
+      dodajButton2.style.cursor = "pointer";
+      dodajButton2.style.textAlign = "center";
       pom.appendChild(dodajButton2);
       pom.lastElementChild.innerHTML = "Dodaj još jednu opciju";
-      pom.lastElementChild.onclick = (event) => {
+      pom.lastElementChild.onclick = event => {
         event.preventDefault();
         this.dodajOpciju(e);
       };
-      let dodajButton = document.createElement("button")
-      dodajButton.style.backgroundColor = 'transparent'
-      dodajButton.style.borderRadius = '8px'
-      dodajButton.style.padding = '5px 10px'
-      dodajButton.style.margin = '10px 10px'
-      dodajButton.style.border = '1px solid white'
-      dodajButton.style.transition = 'all 0.3s ease'
-      dodajButton.style.color = 'white'
-      dodajButton.style.cursor = 'pointer'
-      dodajButton.style.textAlign = 'center'
+      let dodajButton = document.createElement("button");
+      dodajButton.style.backgroundColor = "transparent";
+      dodajButton.style.borderRadius = "8px";
+      dodajButton.style.padding = "5px 10px";
+      dodajButton.style.margin = "10px 10px";
+      dodajButton.style.border = "1px solid white";
+      dodajButton.style.transition = "all 0.3s ease";
+      dodajButton.style.color = "white";
+      dodajButton.style.cursor = "pointer";
+      dodajButton.style.textAlign = "center";
       pom.appendChild(dodajButton);
       pom.lastElementChild.innerHTML = "Izbriši ovu opciju";
-      pom.lastElementChild.onclick = (event) => {
+      pom.lastElementChild.onclick = event => {
         event.preventDefault();
         e.removeChild(pom);
         if (e.childNodes.length == 3) this.dodajOpciju(e);
       };
     },
 
-
-
     NoviDiv(event) {
       let forma = document.getElementById("Radionica");
       let pom = forma.lastElementChild.previousSibling;
       let pom2 = document.createElement("div");
-      pom2.innerHTML = "<input type='text' data-v-e2b99966 class='dugiteksti' placeholder='Unesite naziv pitanja...'/><select data-v-e2b99966 class='VrstePitanja'><option data-v-e2b99966 value='KratkiOdgovor'> Kratki Odgovor </option><option data-v-e2b99966 value='ViseTocnih'> Vise Tocnih </option><option data-v-e2b99966 value='JedanOd'> Jedan Od </option></select><button class='Closer' data-v-e2b99966 @click='Destroying'>X</button>";
+      pom2.innerHTML =
+        "<input type='text' data-v-e2b99966 class='dugiteksti' placeholder='Unesite naziv pitanja...'/><select data-v-e2b99966 class='VrstePitanja'><option data-v-e2b99966 value='KratkiOdgovor'> Kratki Odgovor </option><option data-v-e2b99966 value='ViseTocnih'> Vise Tocnih </option><option data-v-e2b99966 value='JedanOd'> Jedan Od </option></select><button class='Closer' data-v-e2b99966 @click='Destroying'>X</button>";
       forma.insertBefore(pom2, forma.lastElementChild);
 
       let selectElement = pom2.querySelector(".VrstePitanja");
@@ -121,109 +174,143 @@ export default {
       pomocni.addEventListener("click", this.Destroying);
     },
 
-
-
     Destroying(event) {
       event.target.parentNode.parentNode.removeChild(event.target.parentNode);
-      console.log(document.getElementById("Radionica").lastElementChild.previousSibling);
-      if (document.getElementById("Radionica").lastElementChild.previousSibling.id == "NaslovListe") this.NoviDiv();
+      console.log(
+        document.getElementById("Radionica").lastElementChild.previousSibling
+      );
+      if (
+        document.getElementById("Radionica").lastElementChild.previousSibling
+          .id == "NaslovListe"
+      )
+        this.NoviDiv();
     },
 
     async Submitting(event) {
-      if(confirm("Jeste li sigurni da ste dobro unijeli podatke?")){
-      if(this.provjeraUnosa()){
-      try {
-          await axios.post('http://localhost:8000/Radionica',{
-            "NazivRadionice": document.getElementById("NazivPrijave").childNodes[1].value,
-            "OpisRadionice": document.getElementById("DodatneInfo").childNodes[1].value,
-            "VoditeljRadionice": document.getElementById("Voditelj").childNodes[1].value,
-            "DatumPocetka": document.getElementById("Pocetak").childNodes[1].value,
-            "DatumZavrsetka": document.getElementById("Zavrsetak").childNodes[1].value,
-            "PrijaveDo": document.getElementById("RokPrijava").childNodes[1].value,
-            "IdKreatora": this.user.id,
-          }).then(res =>{
-            //console.log(res);
-          })
-        } catch (error) {
-          this.error = error.response ? error.response.data : error.message
-        }
-        await axios.get("http://localhost:8000/Radionica").then(response =>{
-          this.Radionice = response.data[response.data.length - 1].id;
-        })
-        let i = 1;
-        while(i == 1){
-          i = this.unesiPitanje(document.getElementById("NaslovListe").nextSibling);
-        }
-        alert("Prijava je uspješno napravljena!");
-        await navigateTo('/');
-    }
-    else(alert(this.ErrorCode));}
-  },
+      if (confirm("Jeste li sigurni da ste dobro unijeli podatke?")) {
+        if (this.provjeraUnosa()) {
+          try {
+            await axios
+              .post("http://localhost:8000/Radionica", {
+                NazivRadionice:
+                  document.getElementById("NazivPrijave").childNodes[1].value,
+                OpisRadionice:
+                  document.getElementById("DodatneInfo").childNodes[1].value,
+                VoditeljRadionice:
+                  document.getElementById("Voditelj").childNodes[1].value,
+                DatumPocetka:
+                  document.getElementById("Pocetak").childNodes[1].value,
+                DatumZavrsetka:
+                  document.getElementById("Zavrsetak").childNodes[1].value,
+                PrijaveDo:
+                  document.getElementById("RokPrijava").childNodes[1].value,
+                IdKreatora: this.user.id,
+              })
+              .then(res => {
+                //console.log(res);
+              });
+          } catch (error) {
+            this.error = error.response ? error.response.data : error.message;
+          }
+          await axios
+            .get("http://localhost:8000/Radionica")
+            .then(({ data: response }) => {
+              this.Radionice = response.data[response.data.length - 1].id;
+            });
+          let i = 1;
+          while (i == 1) {
+            i = this.unesiPitanje(
+              document.getElementById("NaslovListe").nextSibling
+            );
+          }
+          alert("Prijava je uspješno napravljena!");
+          await navigateTo("/");
+        } else alert(this.ErrorCode);
+      }
+    },
 
-    provjeraUnosa(){
+    provjeraUnosa() {
       let i = 1;
-      let Unosi = Array.from(document.getElementsByTagName('input')).slice(1);
-      Unosi.forEach((polje)=>{
-        if(polje.value == ""){i = 0;
-          this.ErrorCode = "Niste unijeli sve podatke!"
+      let Unosi = Array.from(document.getElementsByTagName("input")).slice(1);
+      Unosi.forEach(polje => {
+        if (polje.value == "") {
+          i = 0;
+          this.ErrorCode = "Niste unijeli sve podatke!";
         }
       });
-      if(document.getElementById("DatPoc").value > document.getElementById("DatKraj").value){
-        console.log(document.getElementById("DatPoc").value +">"+document.getElementById("DatKraj").value);
-        this.ErrorCode = "Datum završetka ne smije biti prije datuma početka!"
+      if (
+        document.getElementById("DatPoc").value >
+        document.getElementById("DatKraj").value
+      ) {
+        console.log(
+          document.getElementById("DatPoc").value +
+            ">" +
+            document.getElementById("DatKraj").value
+        );
+        this.ErrorCode = "Datum završetka ne smije biti prije datuma početka!";
         return 0;
       }
-      if(document.getElementById("DatPrij").value > document.getElementById("DatKraj").value){
-        console.log(document.getElementById("DatPrij").value +">"+document.getElementById("DatKraj").value);
-        this.ErrorCode = "Krajnji rok za prijavu ne smije biti nakon datuma završetka prijave!"
+      if (
+        document.getElementById("DatPrij").value >
+        document.getElementById("DatKraj").value
+      ) {
+        console.log(
+          document.getElementById("DatPrij").value +
+            ">" +
+            document.getElementById("DatKraj").value
+        );
+        this.ErrorCode =
+          "Krajnji rok za prijavu ne smije biti nakon datuma završetka prijave!";
         return 0;
       }
 
       return i;
     },
 
-    unesiPitanje(obj){
-      if(obj.id == "buttoni") return 0;
-      else{
-        if(obj.childNodes[1].value == "KratkiOdgovor"){
-          axios.post('http://localhost:8000/pitanjaRadionice', {
-            "VrstaPodatka": "KratkiOdgovor",
-            "radionice": this.Radionice,
-            "NazivPitanja": obj.childNodes[0].value,
-            "OpcijePitanja": "KratkiOdgovor",
-          })
-        }
-        else if(obj.childNodes[1].value == "ViseTocnih"){
+    unesiPitanje(obj) {
+      if (obj.id == "buttoni") return 0;
+      else {
+        if (obj.childNodes[1].value == "KratkiOdgovor") {
+          axios.post("http://localhost:8000/pitanjaRadionice", {
+            VrstaPodatka: "KratkiOdgovor",
+            radionice: this.Radionice,
+            NazivPitanja: obj.childNodes[0].value,
+            OpcijePitanja: "KratkiOdgovor",
+          });
+        } else if (obj.childNodes[1].value == "ViseTocnih") {
           let opcije = "";
           opcije += obj.childNodes[3].childNodes[1].value;
-          Array.from(obj.childNodes).slice(4).forEach((dijete) => {
-            opcije += (";" + dijete.childNodes[1].value);
+          Array.from(obj.childNodes)
+            .slice(4)
+            .forEach(dijete => {
+              opcije += ";" + dijete.childNodes[1].value;
+            });
+          axios.post("http://localhost:8000/pitanjaRadionice", {
+            VrstaPodatka: "ViseTocnih",
+            radionice: this.Radionice,
+            NazivPitanja: obj.childNodes[0].value,
+            OpcijePitanja: opcije,
           });
-          axios.post('http://localhost:8000/pitanjaRadionice', {
-            "VrstaPodatka": "ViseTocnih",
-            "radionice": this.Radionice,
-            "NazivPitanja": obj.childNodes[0].value,
-            "OpcijePitanja": opcije,
-          })
-        }
-        else if(obj.childNodes[1].value == "JedanOd"){
+        } else if (obj.childNodes[1].value == "JedanOd") {
           let opcije = "";
           opcije += obj.childNodes[3].childNodes[1].value;
-          Array.from(obj.childNodes).slice(4).forEach((dijete) => {
-            opcije += (";" + dijete.childNodes[1].value);
+          Array.from(obj.childNodes)
+            .slice(4)
+            .forEach(dijete => {
+              opcije += ";" + dijete.childNodes[1].value;
+            });
+          axios.post("http://localhost:8000/pitanjaRadionice", {
+            VrstaPodatka: "JedanOd",
+            radionice: this.Radionice,
+            NazivPitanja: obj.childNodes[0].value,
+            OpcijePitanja: opcije,
           });
-          axios.post('http://localhost:8000/pitanjaRadionice', {
-            "VrstaPodatka": "JedanOd",
-            "radionice": this.Radionice,
-            "NazivPitanja": obj.childNodes[0].value,
-            "OpcijePitanja": opcije,
-          })
         }
       }
       return this.unesiPitanje(obj.nextSibling);
-    }
-}
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -232,10 +319,8 @@ export default {
   text-align: center;
 }
 
-
-
 .Closer {
-  background-color: #101D2F;
+  background-color: #101d2f;
   border-radius: 8px;
   padding: 10px 20px;
   margin: 20px 20px;
@@ -251,7 +336,7 @@ export default {
 }
 
 .Buttoni {
-  background-color: #101D2F;
+  background-color: #101d2f;
   border-radius: 8px;
   padding: 10px 20px;
   margin: 20px 20px;
@@ -326,7 +411,7 @@ input[type="datetime-local"] {
   color: white;
 }
 
-input[type='text']::placeholder {
+input[type="text"]::placeholder {
   color: white;
 }
 

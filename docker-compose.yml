@@ -1,0 +1,57 @@
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: prijave-laravel
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: mysql
+      DB_DATABASE: prijave
+      DB_USERNAME: prijave
+      DB_PASSWORD: prijave
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.0
+    container_name: prijave-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: prijave
+      MYSQL_USER: prijave
+      MYSQL_PASSWORD: prijave
+      MYSQL_ROOT_PASSWORD: prijave
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pprijave",
+        ]
+      timeout: 20s
+      retries: 10
+      interval: 5s
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: prijave-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

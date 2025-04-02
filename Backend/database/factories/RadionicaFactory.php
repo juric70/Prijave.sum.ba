@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class radionicaFactory extends Factory
+class RadionicaFactory extends Factory
 {
     public function definition(): array
     {
-        $var = rand(1,1000);
-        if($var > 500){
+        $var = rand(1, 1000);
+        if ($var > 500) {
             return [
                 'NazivRadionice' => 'Test Radionica ' . (string)$var,
                 'OpisRadionice' => 'Testni Opis Radionice ' . (string)$var,
@@ -23,8 +23,7 @@ class radionicaFactory extends Factory
                 'PrijaveDo' => '2026-10-11 00:00:00',
                 'IdKreatora' => 1,
             ];
-        }
-        else{
+        } else {
             return [
                 'NazivRadionice' => 'Test Radionica ' . (string)$var,
                 'OpisRadionice' => 'Testni Opis Radionice ' . (string)$var,
