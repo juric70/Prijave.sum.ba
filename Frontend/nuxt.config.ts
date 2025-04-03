@@ -2,7 +2,7 @@
 import viteSvgLoader from "vite-svg-loader";
 
 export default {
-  modules: ["vue3-carousel-nuxt"],
+  modules: ["vue3-carousel-nuxt",'@nuxt/ui'],
   devtools: { enabled: true },
   postcss: {
     plugins: {
@@ -13,12 +13,12 @@ export default {
 
   css: [
     './assets/style.css',
-    '/assets/css/main.css',
+    '~/assets/css/main.css',
   ],
 
   vite: {
     plugins: [viteSvgLoader()],
   },
-
+  
   compatibilityDate: "2025-01-12",
 };
