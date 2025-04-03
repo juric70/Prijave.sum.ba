@@ -2,14 +2,14 @@
   <div
     class="hero-image h-[20rem] bg-[#e3e3e3] bg-cover bg-center sm:h-[30rem]"
     style="
-      background-image: url(&quot;https://static.vecteezy.com/system/resources/previews/018/994/847/non_2x/abstract-technology-futuristic-glowing-blue-and-red-light-lines-with-speed-motion-blur-effect-on-dark-blue-background-free-vector.jpg&quot;);
+      background-color: transparent;
     ">
     <div
       class="flex h-full flex-col items-center justify-center px-4 text-center">
-      <h1 class="text-3xl font-bold text-[#094776] sm:text-4xl">
+      <h1 class="text-3xl font-bold text-[#ffffff] sm:text-4xl">
         Dobrodošli na PRIJAVE
       </h1>
-      <p class="mt-2 text-base text-gray-700 sm:mt-4 sm:text-lg">
+      <p class="mt-2 text-base text-gray-700 sm:mt-4 sm:text-lg text-[#ffffff]">
         Ovo je samo placeholder za sliku
       </p>
     </div>
