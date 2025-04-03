@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer bg-gradient-to-br from-[#094776] to-[#0a5992]">
+    <footer class="footer">
       <div class="footer-section left">
         <p>
           Udruga Switch <br>

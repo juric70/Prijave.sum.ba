@@ -46,12 +46,12 @@ axios.defaults.withCredentials = true;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  color: #333;
+  color: #ffffff;
   text-align: left;
 }
 
 .about-us-container h1 {
-  color: #014479;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class korisnikPodatakFactory extends Factory
+class KorisnikPodatakFactory extends Factory
 {
     public function definition(): array
     {

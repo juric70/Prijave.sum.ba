@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class listaprijava extends Model
+class ListaPrijava extends Model
 {
-    protected $table = 'listaprijava';
+    protected $table = 'listaPrijava';
     use HasFactory;
 
     protected $fillable = [
@@ -15,15 +15,18 @@ class listaprijava extends Model
         'IdRadionice'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function radionica(){
-        return $this->belongsTo(radionica::class);
+    public function radionica()
+    {
+        return $this->belongsTo(Radionica::class);
     }
 
-    public function korisnikPodatak(){
-        return $this->hasMany(korisnikPodatak::class);
+    public function korisnikPodatak()
+    {
+        return $this->hasMany(KorisnikPodatak::class);
     }
 }

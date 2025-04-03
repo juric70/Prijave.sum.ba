@@ -23,11 +23,10 @@
 
   <style>
     body{
-      background-image: linear-gradient(to top right, #3a3c60, #423b60,#54395a,#673554,#7d334d,#8c344c,#ac3043,#b72e40,#c12f3f);
+      background-image: radial-gradient(circle at top right, #c12f3f, #b72e40,#ac3043,#8c344c,#54395a,#423b60,#094776, #094776, #094776, #094776, #094776);
       background-position: center center;
       background-size: cover;
       background-repeat: no-repeat;
-      background-attachment: fixed;
     }
   </style>
   
