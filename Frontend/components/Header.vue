@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <nuxt-link to="/"><img src="/public/sumit-Photoroom.png" alt="SUMIT icon" class="logo"></nuxt-link>
+      <nuxt-link to="/"><img src="/sumit-Photoroom.png" alt="SUMIT icon" class="logo"></nuxt-link>
       <div class="navbar-end">
         <nuxt-link to="/" id="testiramovo" class="navbar-item">Home</nuxt-link>
         <nuxt-link to="/about" class="navbar-item">About Us</nuxt-link>
