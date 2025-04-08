@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class radionica extends Model
+class Radionica extends Model
 {
     use HasFactory;
 
@@ -23,15 +23,18 @@ class radionica extends Model
         'IdKreatora'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function pitanjaRadionice(){
-        return $this->hasMany(pitanjaRadionice::class);
+    public function pitanjaRadionice()
+    {
+        return $this->hasMany(PitanjaRadionice::class);
     }
 
-    public function listaPrijava(){
+    public function listaPrijava()
+    {
         return $this->hasMany(listaPrijava::class);
     }
 }

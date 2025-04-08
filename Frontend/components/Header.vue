@@ -5,16 +5,19 @@
       <div class="navbar-end">
         <nuxt-link to="/" id="testiramovo" class="navbar-item">Home</nuxt-link>
         <nuxt-link to="/about" class="navbar-item">About Us</nuxt-link>
-        <nuxt-link to="/korisnici" v-if="vrstaKorisnika == 1" class="navbar-item">Korisnici</nuxt-link>
-        <nuxt-link to="/kreiraj" v-if="vrstaKorisnika <= 2" class="navbar-item">Kreiraj</nuxt-link>
         <nuxt-link to="/radionice" v-if="vrstaKorisnika <= 3" class="navbar-item">Prijave</nuxt-link>
-        <nuxt-link to="/logout" v-if="vrstaKorisnika <= 3" class="navbar-item">Odjavi se</nuxt-link>
-        <p v-if="vrstaKorisnika <= 3">Pozdrav, {{ nazivKorisnika }}</p>
 
         
-        <nuxt-link to="/login" v-if="prijavaFailed" class="navbar-item">Login</nuxt-link>
         <!-- Trenutno ugradjena verzija za pretvaranje podataka u Excel (zasad samo smeta)
         <button @click="fetchDataAndDownload()">Download Data as CSV</button>-->
+      </div>
+      <div class="navbar-end">
+
+        <nuxt-link to="/korisnici" v-if="vrstaKorisnika == 1" class="navbar-item">Korisnici</nuxt-link>
+        <nuxt-link to="/kreiraj" v-if="vrstaKorisnika <= 2" class="navbar-item">Kreiraj</nuxt-link>
+        <nuxt-link to="/logout" v-if="vrstaKorisnika <= 3" class="navbar-item">Odjavi se</nuxt-link>
+        <nuxt-link to="/login" v-if="prijavaFailed" class="navbar-item">Login</nuxt-link>
+        <p v-if="vrstaKorisnika <= 3">Pozdrav, {{ nazivKorisnika }}</p>
       </div>
       <div class="hamburger" @click="toggleMenu">
         <span></span>
@@ -106,12 +109,11 @@ onMounted(() => {
 }
 
 .header {
-  background-color: #014479;
+  background-color: transparent;
   width: 100vw;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 0 20px;
   z-index: 999;
   flex-shrink: 0; /* Prevents header and footer from shrinking */
