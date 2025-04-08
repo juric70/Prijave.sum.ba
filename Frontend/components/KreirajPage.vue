@@ -258,7 +258,7 @@ export default {
 
 <style scoped>
 .hero {
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
 }
 .Closer {
@@ -375,12 +375,12 @@ input[type="text"]::placeholder {
   display: flex;
   align-items: center;
   gap: 10px;
-  justifyContent: space-between;
+  justify-content: space-between;
 }
 .novo {
   display: flex;
   align-items: center;
-  justifyContent: space-between;
+  justify-content: space-between;
   gap: 10px;
 }
 
