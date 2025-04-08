@@ -62,6 +62,7 @@ export default {
 </script>
 
 <template>
+  <div id="allWrapper">
   <div class="text1"> DOBRODOŠLI!</div>
   <div class="text2"> PRIJAVE</div>
     <div class="square">
@@ -101,12 +102,17 @@ export default {
         </div>
     </div>
     </div>
+  </div>
     <div>
         <Footer/>
     </div>
 </template>
 
 <style scoped>
+#allWrapper{
+  display: flex;
+  flex-direction: column;
+}
 .square{
     background-color:#FFFFFF2E;
     width: 450px;
