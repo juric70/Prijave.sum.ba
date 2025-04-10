@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4 flex flex-col pt-4 md:mx-8 xl:mx-32 xl:p-8">
+  <div class="mx-4 min-h-screen flex flex-col pt-4 md:mx-8 xl:mx-32 xl:p-8">
     <div class="flex flex-col gap-4 pb-4 xl:pb-8">
       <form
         class="mx-auto flex w-full max-w-sm items-center gap-4"

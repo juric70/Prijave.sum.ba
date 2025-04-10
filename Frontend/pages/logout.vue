@@ -19,3 +19,17 @@ export default{
 }
 
 </script>
+
+<template>
+    <div id="logout">
+        Logout
+    </div>
+</template>
+
+<style>
+#logout{
+    min-height: 100vh;
+    background-color: transparent;
+    color: transparent;
+}
+</style>

@@ -13,15 +13,18 @@
     "@chenfengyuan/vue-carousel": "^2.0.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
+    "flatpickr": "^4.6.13",
     "nuxt": "^3.11.2",
     "nuxt-swiper": "^1.2.2",
     "swiper": "^11.1.4",
     "vue": "^3.4.21",
     "vue-carousel": "^0.11.0",
+    "vue-class-component": "^8.0.0-rc.1",
     "vue-router": "^4.3.0",
     "vue-slider-component": "^3.2.24",
     "vue3-carousel": "^0.3.3",
     "vue3-carousel-nuxt": "^1.1.1",
+    "vue3-datepicker": "^0.4.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
