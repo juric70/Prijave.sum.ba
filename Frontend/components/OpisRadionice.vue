@@ -7,21 +7,20 @@
           <h3>{{ radionicaInfo.OpisRadionice }}</h3>
         </div>
         <h1 style="color: white">Sudionici</h1>
-        <hr size="10" width="100%" color="white" />
         <div class="table-responsive">
           <table class="lista-tablica">
             <thead>
             <tr>
               <th>Ime i prezime</th>
-              <th>Email</th>
+              <th class="email">Email</th>
               <th>Datum</th>
               <th>Akcija</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="tabela">
             <tr v-for="(prijava, index) in prijave" :key="index">
               <td>{{ prijava.imePrezime }}</td>
-              <td>{{ prijava.email }}</td>
+              <td class="email">{{ prijava.email }}</td>
               <td>{{ prijava.datum }}</td>
               <td>
                 <button class="Buttoni" @click="pregledajPrijavu(prijava.id)">
@@ -152,9 +151,10 @@ export default {
 }
 @media (max-width: 600px) {
   .hero-content {
-    width: 90%;
+    width: 95%;
     padding: 0 5%;
   }
+  
   .lista-tablica th,
   .lista-tablica td {
     font-size: 14px;
@@ -164,5 +164,11 @@ export default {
     font-size: 14px;
     padding: 8px 16px;
   }
+ .email {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+ }
 }
 </style>

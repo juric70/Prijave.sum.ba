@@ -6,7 +6,7 @@
         <div class="about-us-container">
       <h1 style="font-size: 2rem; margin-bottom: 30px;">O nama</h1>
       <div class="about-us-header">
-        <img src="../assets/sumit_transparent.svg" alt="SUMIT Logo" class="logo" >
+        <img src="/sumit_transparent.svg" alt="SUMIT Logo" class="logo" >
         <p>
           Centar za informacijske tehnologije Sveučilišta u Mostaru - SUMIT osnovan je 13. prosinca 2017. godine u cilju pružanja podrške obrazovnoj i akademskoj zajednici u upotrebi informacijsko-komunikacijskih tehnologija i osiguranja pristupa novim tehnologijama i informacijskim uslugama. U ispunjavanju misije i vizije SUMIT-a od velikog su značaja partnerske institucije s kojima Sveučilište u Mostaru ima dugogodišnju suradnju. Tu prije svega držimo važnom suradnju s HT Eronet Mostar, Hrvatskom akademskom i istraživačkom mrežom - CARNET, Sveučilišnim računskim centrom (SRCE) i fakultetima koji se bave problematikom razvoja informacijskih sustava. Također je važna suradnja i s lokalnim, pouzdanim IT tvrtkama.
         </p>
