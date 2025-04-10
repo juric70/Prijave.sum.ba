@@ -2,206 +2,281 @@
   <section class="forma">
     <div class="hero-content">
       <form id="Radionica" @submit.prevent="prijaviSe">
+        <div class="dio2">
+          <p id="NazivRadionice"><h1 id="Naziv"></h1></p>
+        </div>
         <div class="dio">
-         <p id="NazivRadionice"><h1 id="Naziv"></h1> </p>
-         <p id="OpisRadionice"><h3 id="Opis"></h3> </p>
-  
-         </div>
-        
-         
-        <hr size="10" width="100%" color="white" />
-        
-        <div class="dio" id="listaPitanja">
-         </div>
+          <p id="OpisRadionice"><h3 id="Opis"></h3></p>
+        </div>
+
+        <div class="dio" id="listaPitanja" v-for="(item, index) in pirjac" :key="index">
+            <div v-if="item.VrstaPodatka === 'KratkiOdgovor'">
+              <br/>
+              <h3>{{ item.NazivPitanja }}</h3>
+              <br/>
+              <textarea v-model="item.odgovor" :placeholder="item.NazivPitanja" cols="60"></textarea>
+            </div>
+            <div v-else-if="item.VrstaPodatka === 'JedanOd'">
+              <br/>
+              <h3>{{ item.NazivPitanja }}</h3>
+              <div v-for="(option, index) in item.OpcijePitanja.split(';')" :key="index">
+                <br/>
+                <input type="radio" :value="option" v-model="item.odgovor"  id="{{option}}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="{{option}}">{{ option }}</label>
+              </div>
+            </div>
+            <div v-else-if="item.VrstaPodatka === 'ViseTocnih'">
+              <br/>
+              <h3>{{ item.NazivPitanja }}</h3>
+              <div v-for="(option, index) in item.OpcijePitanja.split(';')" :key="index">
+                <br/>
+                <input type="checkbox" :value="option" v-model="item.odgovor"  id="{{option}}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="{{option}}">{{ option }}</label>
+              </div>
+            </div>
+          
+        </div>
+
+        <button class="Buttoni">Prijavi se</button>
       </form>
     </div>
   </section>
 </template>
+
+
 
 <script>
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 export default {
-  mounted(){
+  mounted() {
     this.getRadionica();
   },
-  data(){
-    return{
-      user: [],
-      brojPrijave: 0,
+  data() {
+    return {
+      user: [], 
+      brojPrijave: 0, 
+      pirjac: [], 
     }
   },
 
   methods: {
-    async getRadionica(){
-      try {
-          await axios.get("http://localhost:8000/Radionica/" + this.$route.query.id).then(res =>{
-            document.getElementById("Naziv").innerHTML = res.data.NazivRadionice;
-            document.getElementById("Opis").innerHTML = res.data.OpisRadionice;
-          })
-        } catch (error) {
-          this.error = error.response ? error.response.data : error.message
-        }
-        try{
-          await axios.get("http://localhost:8000/SvaPitanja/" + this.$route.query.id).then(res =>{
-            res.data.forEach(pitanje=>{
-              this.ispisiPitanje(pitanje);
-            })
-          })
-        document.getElementById("listaPitanja").appendChild(document.createElement("div"));
-        document.getElementById("listaPitanja").lastChild.innerHTML="<button class='Buttoni' data-v-a81738bd> Prijavi se </button>";
-        
-        }catch(error){
-          this.error = error.response ? error.response.data : error.message
-        }
-    },
-    ispisiPitanje(pitanje){
-      let pom = document.getElementById("listaPitanja");
-      if(pitanje.VrstaPodatka == "KratkiOdgovor"){
-        pom.appendChild(document.createElement("div"));
-        pom.lastChild.innerHTML="<h3 id='KratkiOdgovor'> " + pitanje.NazivPitanja + " <br/></h3><textarea id='odgovor':class='{'textarea-custom-width':true,'h-auto':true}'@input='adjustHeight'class='resize-none overflow-hidden p-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50'></textarea>";
-        pom.lastChild.childNodes[1].style.width = '50%';
-      }
-      else if(pitanje.VrstaPodatka == "ViseTocnih"){
-        pom.appendChild(document.createElement("div"));
-        let popisPitanja = pitanje.OpcijePitanja.split(";");
-        let stringOpcija = "<h3 id='ViseTocnih'>" + pitanje.NazivPitanja + "</h3>";
-        popisPitanja.forEach((opcija) => {
-          stringOpcija += "<input type='checkbox' name='option" + pitanje.id + "' value='" + opcija + "'><label for='option" + pitanje.id + "'>" + opcija + "</label><br/>"
-        })
-        pom.lastChild.innerHTML = stringOpcija;
-      }
-      else if(pitanje.VrstaPodatka == "JedanOd"){
-        pom.appendChild(document.createElement("div"));
-        let popisPitanja = pitanje.OpcijePitanja.split(";");
-        let stringOpcija = "<h3 id='JedanOd'>" + pitanje.NazivPitanja + "</h3>";
-        popisPitanja.forEach((opcija) => {
-          stringOpcija += "<input type='radio' name='option" + pitanje.id + "' value='" + opcija + "'><label for='option" + pitanje.id + "'>" + opcija + "</label><br/>"
-        })
-        pom.lastChild.innerHTML = stringOpcija;
-      }
-    },
-    async prijaviSe(){
+    async getRadionica() {
       try{
-        await axios.post("http://localhost:8000/ListaPrijava",{
-          "IdKreatora": this.user.id,
-          "IdRadionice": this.$route.query.id,
-        }).then(res => {
-          this.brojPrijave = res.data;
-        })
-        Array.from(document.getElementById("listaPitanja").childNodes).forEach(pitanje =>{
-          this.unesiPodatak(pitanje);
-        });
-      }catch(error){console.log(error);}
-    },
-    unesiPodatak(pitanje){
-      if(pitanje.firstChild.id == "KratkiOdgovor"){
-        try{
-          axios.post("http://localhost:8000/KorisnikPodatak", {
-            "IdPrijave": this.brojPrijave,
-            "Odgovor": pitanje.childNodes[1].value,
-          })
-        }catch(error){console.log(error);}
-      }
-      else if (pitanje.firstChild.id === "JedanOd") {
-    let selectedValue = null;
-    
-    Array.from(pitanje.childNodes).forEach(child => {
-      if (child.tagName === "INPUT" && child.type === "radio" && child.checked) {
-        selectedValue = child.value;
-      }
-    });
-    console.log(this.brojPrijave);
-    if (selectedValue !== null) {
-      try {
-        axios.post("http://localhost:8000/KorisnikPodatak", {
-          "IdPrijave": this.brojPrijave,
-          "Odgovor": selectedValue,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    }
-    else if (pitanje.firstChild.id === "ViseTocnih") {
-    let selectedValues = [];
-    // Find all selected checkboxes
-    Array.from(pitanje.childNodes).forEach(child => {
-      if (child.tagName === "INPUT" && child.type === "checkbox" && child.checked) {
-        selectedValues.push(child.value);
-      }
-    });
-
-    if (selectedValues.length > 0) {
-      try {
-        axios.post("http://localhost:8000/KorisnikPodatak", {
-          "IdPrijave": this.brojPrijave,
-          "Odgovor": selectedValues.join(";"), // Join selected values with a delimiter if needed
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      console.log("No checkboxes selected");
+    let {data} = await axios.get("http://localhost:8000/api/user");
+    this.user = data.id;
+  }
+  catch(error){console.log(error);
+    if(error.response.status == 401){
+      prijavaFailed.value = true;
     }
   }
+
+      try {
+        await axios.get("http://localhost:8000/Radionica/" + this.$route.query.id).then(res => {
+          document.getElementById("Naziv").innerHTML = res.data.NazivRadionice;
+          document.getElementById("Opis").innerHTML = res.data.OpisRadionice;
+        });
+      } catch (error) {
+        this.error = error.response ? error.response.data : error.message;
+      }
+      
+      try {
+        await axios.get("http://localhost:8000/SvaPitanja/" + this.$route.query.id).then(res => {
+          this.pirjac = res.data;
+          this.pirjac.forEach(item => {
+            if(item.VrstaPodatka != "ViseTocnih")
+            {
+            item.odgovor = "";}
+            else{
+              item.odgovor=[];
+            }
+
+          });
+        });
+      } catch (error) {
+        this.error = error.response ? error.response.data : error.message;
+      }
+    },
+
+    async prijaviSe() {
+      try {
+        const response = await axios.post("http://localhost:8000/ListaPrijava", {
+          "IdKreatora": this.user, 
+          "IdRadionice": this.$route.query.id
+        });
+        this.brojPrijave = response.data;
+        this.pirjac.forEach(item => {
+          console.log(item)
+          this.unesiPodatak(item);
+        });
+
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async unesiPodatak(bola) {
+      let radi_molim_te="";
+      if(bola.VrstaPodatka=="ViseTocnih")
+        bola.odgovor.forEach(jao=>{radi_molim_te+=jao+";"}) 
+      else
+      radi_molim_te=bola.odgovor;
+      try {
+        console.error(bola);
+        await axios.post("http://localhost:8000/KorisnikPodatak", {
+          "IdPrijave": this.brojPrijave,
+          "Odgovor": radi_molim_te,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }
-
-
 </script>
 
+
+
+
 <style scoped>
+.hero-content {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
 
-  .forma {
-    height: 100vh;
-    text-align: center;
-  }
+.forma {
+  width: 80%;
+  max-width: 1000px;
+  height: 100%;
+  background: transparent;
+  border-radius: 12px;
+  padding: 30px;
+  margin: 5% auto auto auto;
+}
 
-  .hero-content {
-    max-width: 800px;
-  }
+.dio2 {
+  font-size: 50px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  background: none;
+}
 
-  #Radionica {
-    background-color: #014479;
-    width: 60vw;
-    position: relative;
-    left: 20vw;
-    top: 5vw;  
-    text-align: left;
-    line-height: 4vh;
-    font-size: 2vh;
-    border-radius:16px;
-  }
-
-  .dugiodgovor {
-    width: auto;
-    height: auto;
-  }
-
-  .dio {
-    padding: 20px 10px 5px 20px;
-    border-radius: 8px;
-  }
-
-  .textarea-custom-width {
-    width: 50%;
-  } 
-  .Buttoni {
-  background-color: #101D2F;
-  border-radius: 8px;
-  padding: 10px 20px;
-  margin: 20px 20px;
-  border: none;
-  transition: all 0.3s ease;
+#Naziv {
+  font-size: 60px;
+  font-weight: bold;
   color: white;
-  cursor: pointer;
+  background: none;
+}
+
+#Opis {
+  font-size: 40px;
+  color: white;
+  margin-top: 10px;
   text-align: center;
 }
 
-.Buttoni:hover {
-  background-color: #080f18;
+h3 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+#listaPitanja {
+  font-size: 20px;
+  color:white;
+  margin-top: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+textarea {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 18px;
+  color: #333;
+  resize: none;
+  min-height: 100px;
+}
+
+.Buttoni {
+  background-color: #101D2F;
+  border-radius: 8px;
+  padding: 12px 25px;
+  margin: 20px 0;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 18px;
+  width: 100%;
+  height: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .forma {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #Naziv {
+    font-size: 45px;
+  }
+
+  #Opis {
+    font-size: 35px;
+  }
+
+  #listaPitanja {
+    font-size: 25px;
+  }
+
+  .Buttoni {
+    font-size: 18px;
+  }
+
+  textarea {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .forma {
+    width: 95%;
+    padding: 15px;
+  }
+
+  #Naziv {
+    font-size: 35px;
+  }
+
+  #Opis {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  #listaPitanja {
+    font-size: 22px;
+  }
+
+  .Buttoni {
+    font-size: 16px;
+  }
+
+  textarea {
+    width: 95%;
+  }
 }
 </style>
+
