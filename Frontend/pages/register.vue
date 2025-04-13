@@ -1,208 +1,260 @@
-<script>
-import axios from 'axios';
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.css';
+<script setup lang="ts">
+import { reactive, onMounted } from "vue";
+import axios from "axios";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.css";
 import { Croatian } from "flatpickr/dist/l10n/hr.js";
+import { useRouter } from "vue-router";
+
+definePageMeta({
+  middleware: ["sanctum:guest"],
+});
+
 axios.defaults.withCredentials = true;
 
-export default{
-    mounted(){
-      flatpickr("#birthInput", {
-      dateFormat: "d.m.Y", 
-      allowInput: false, 
-      locale: Croatian 
-    });
-    },
-    data() {
-    return {
-      floatedLabels: {},
-      inputHeights: {},
-      birth: null,
-      inputValues: {},
-      errors: {
-        general: "",
-      },
-      
-      }
-  },
-    methods: {
-      async registrirajSe(){
-    this.errors = {};
-    const { name, lastname, birth, email, password, submitPassword } = this.inputValues;
-    if (!name || !lastname || !birth || !email || !password || !submitPassword) {
-      this.errors.general = "Popunite sva polja!";
-      return;
-   }
-    let localDatum = new Date();
-    let unesenDatum = new Date(document.getElementById("birthInput").value);
+const router = useRouter();
+
+const floatedLabels = reactive<Record<string, boolean>>({});
+const inputHeights = reactive<Record<string, string>>({});
+const inputValues = reactive<Record<string, string>>({
+  name: "",
+  lastname: "",
+  birth: "",
+  email: "",
+  password: "",
+  submitPassword: "",
+});
+const errors = reactive<Record<string, string>>({
+  general: "",
+  birthInput: "",
+  submitPassword: "",
+});
+
+const registrirajSe = async () => {
+  // Reset errors
+  errors.general = "";
+  errors.birthInput = "";
+  errors.submitPassword = "";
+
+  const { name, lastname, birth, email, password, submitPassword } =
+    inputValues;
+
+  // Validate inputs
+  if (!name || !lastname || !birth || !email || !password || !submitPassword) {
+    errors.general = "Popunite sva polja!";
+    return;
+  }
+
+  const localDatum = new Date();
+  const unesenDatum = new Date(birth);
+
+  if (password !== submitPassword) {
+    errors.submitPassword = "Šifre se ne podudaraju";
+    return;
+  }
+
+  if (localDatum.getTime() < unesenDatum.getTime()) {
+    errors.birthInput = "Neispravan unos datuma!";
+    return;
+  }
+
+  try {
     await axios.get("http://localhost:8000/sanctum/csrf-cookie");
-    if(document.getElementById("password").value != document.getElementById("submitPassword").value){
-      this.errors.submitPassword = "Šifre se ne podudaraju";  
-      return;  
+    await axios.post("http://localhost:8000/register", {
+      email,
+      name,
+      lastname,
+      password,
+      datumRodjenja: birth,
+    });
+    router.push("/"); // Redirect to home page after successful registration
+  } catch (error: any) {
+    if (error.response?.status === 404) {
+      errors.general = "Već ste ulogirani!";
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } else if (error.response?.status === 422) {
+      errors.general = error.response.data.message || "Došlo je do greške!";
+    } else {
+      errors.general = "Došlo je do greške pri registraciji!";
     }
-    else if(localDatum.getTime() < unesenDatum.getTime()){
-      this.errors.birthInput = "Neispravan unos datuma!";
-      return;
-    }
-    else{
-        try {
-        await axios.post("http://localhost:8000/register", {
-            email: document.getElementById("email").value,
-            name: document.getElementById("nameInput").value,
-            lastname: document.getElementById("lastnameInput").value,
-            password: document.getElementById("password").value,
-            datumRodjenja: document.getElementById("birthInput").value,
-        }).then(res => {
-          location.href = '/';
-        });
-        //let {data} = await axios.get("http://localhost:8000/api/user");
-        }catch(error){
-        if(error.response.status == 404){
-          this.errors.general = "Već ste ulogirani!";
-          setTimeout(() => {
-           location.href = '/';
-          }, 2000);
-        }
-        else if(error.response.status == 422){
-          this.errors.general = error.response.data.message || "Došlo je do greške!";
-        } else {
-            this.errors.general = "Došlo je do greške pri registraciji!";
-          }
-        }
-    }
-    },
+  }
+};
 
-    floatLabel(inputId) {
-      this.floatedLabels[inputId] = true
-      this.inputHeights[inputId] = '70px'
-    },
-    resetHeight(inputId) {
-      this.inputHeights[inputId] = '50px'
-      if (!this.inputValues[inputId] || this.inputValues[inputId] === '') 
-      this.floatedLabels[inputId] = false;
-    },
-    isFloated(inputId) {
-      return this.floatedLabels[inputId]
-    },
-    handleInput(inputId, event) {
-      this.inputValues[inputId] = event.target.value; // Sprema vrijednost unosa
-      if (event.target.value) {
-        this.floatedLabels[inputId] = true; // Ako je unesena vrijednost, labela ostaje gore
-      }
-    }
-}
-}
+const floatLabel = (inputId: string) => {
+  floatedLabels[inputId] = true;
+  inputHeights[inputId] = "70px";
+};
 
+const resetHeight = (inputId: string) => {
+  inputHeights[inputId] = "50px";
+  if (!inputValues[inputId]) {
+    floatedLabels[inputId] = false;
+  }
+};
 
+const isFloated = (inputId: string) => {
+  return floatedLabels[inputId];
+};
+
+const handleInput = (inputId: string, event: Event) => {
+  const target = event.target as HTMLInputElement;
+  inputValues[inputId] = target.value;
+  if (target.value) {
+    floatedLabels[inputId] = true;
+  }
+};
+
+onMounted(() => {
+  flatpickr("#birthInput", {
+    dateFormat: "d.m.Y",
+    allowInput: false,
+    locale: Croatian,
+  });
+});
+
+const fields = [
+  {
+    id: "name",
+    name: "name",
+    type: "text",
+    label: "Ime",
+    required: true,
+    errorKey: "general",
+  },
+  {
+    id: "lastname",
+    name: "lastname",
+    type: "text",
+    label: "Prezime",
+    required: true,
+    errorKey: "general",
+  },
+  {
+    id: "birth",
+    name: "birth",
+    type: "text",
+    label: "Datum rođenja",
+    required: true,
+    errorKey: "birthInput",
+  },
+  {
+    id: "email",
+    name: "email",
+    type: "text",
+    label: "Mail",
+    required: true,
+    errorKey: "general",
+  },
+  {
+    id: "password",
+    name: "password",
+    type: "password",
+    label: "Lozinka",
+    required: true,
+    errorKey: "submitPassword",
+  },
+  {
+    id: "submitPassword",
+    name: "submitPassword",
+    type: "password",
+    label: "Ponovi lozinku",
+    required: true,
+    errorKey: "submitPassword",
+  },
+];
 </script>
 
 <template>
   <div id="allWrapper">
-    <div class="text1"> DOBRODOŠLI!</div>
-    <div class="text2"> PRIJAVE</div>
+    <div class="text1">DOBRODOŠLI!</div>
+    <div class="text2">PRIJAVE</div>
     <div class="square">
-        <div class="inputWrapper">
-            <h3 class="title">Registriraj se</h3>
-            <div class="inputContainer">
-                <input type="text" id="nameInput" name="name" 
-                required 
-                class="inputField" 
-                :style="{ height: inputHeights.name }" 
-                @focus="floatLabel('name')" 
-                @blur="resetHeight('name')" 
-                @input="handleInput('name', $event)" 
-                v-model="inputValues.name">
-                <label for="nameInput" class="label" :class="{ floated: isFloated('name') }">Ime</label>  
-            </div>
-            <div class="inputContainer">
-                <input type="text" id="lastnameInput" name="lastname" 
-                required
-                class="inputField" 
-                :style="{ height: inputHeights.lastname }" 
-                @focus="floatLabel('lastname')" 
-                @blur="resetHeight('lastname')" 
-                @input="handleInput('lastname', $event)" 
-                v-model="inputValues.lastname">
-                <label for="lastnameInput" class="label" :class="{ floated: isFloated('lastname') }">Prezime</label>  
-            </div>
-            <div class="inputContainer">
-                <input type="text" id="birthInput" name ="birth"
-                required                
-                :class="{'inputField': true, 'input-error': errors.birthInput}" 
-                :style="{ height: inputHeights.birth }" @focus="floatLabel('birth')"
-                @blur="resetHeight('birth')" 
-                @input="handleInput('birth', $event)" 
-                v-model="inputValues.birth"/>
-                <label for="birthInput" class="label" :class="{ floated: isFloated('birth'),  }">Datum rođenja</label> 
-                <p v-if="errors.birthInput" class="error-msg">{{ errors.birthInput }}</p>
-              </div>
-            <div class="inputContainer">
-                <input type="text" id="email" name="email" 
-                required class="inputField" 
-                :style="{ height: inputHeights.email }"
-                :class="{'inputField': true, 'input-error': errors.email}" 
-                @focus="floatLabel('email')" 
-                @blur="resetHeight('email')" 
-                @input="handleInput('email', $event)" 
-                v-model="inputValues.email">
-                <label for="email" class="label" :class="{ floated: isFloated('email') }">Mail</label>  
-                <p v-if="errors.email" class="error-msg">{{ errors.email }}</p>
-            </div>
-            <div class="inputContainer">
-                <input type="password" id="password" name="password" 
-                required 
-                :class="{'inputField': true, 'input-error': errors.submitPassword}" 
-                :style="{ height: inputHeights.password }" 
-                @focus="floatLabel('password')" 
-                @blur="resetHeight('password')" 
-                @input="handleInput('password', $event)" 
-                v-model="inputValues.password">
-                 <label for="password" class="label" :class="{ floated: isFloated('password') }">Lozinka</label> 
-            </div>
-            <div class="inputContainer">
-                <input type="password" id="submitPassword" name="submitPassword" 
-                required :class="{'inputField': true, 'input-error': errors.submitPassword}" 
-                :style="{ height: inputHeights.submitPassword }" 
-                @focus="floatLabel('submitPassword')" 
-                @blur="resetHeight('submitPassword')" 
-                @input="handleInput('submitPassword', $event)" 
-                v-model="inputValues.submitPassword">
-                <label for="submitPassword" class="label" :class="{ floated: isFloated('submitPassword') }">Ponovi lozinku</label> 
-                <p v-if="errors.submitPassword" class="error-msg">{{ errors.submitPassword }}</p> 
-            </div>
-            <p v-if="errors.general" class="error-msg general-msg">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#721c24" class="size-6" >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-              </svg>
-              {{ errors.general }}</p>
-            <button type="button" class="submitButton" @click="registrirajSe">Registriraj se</button>
-            <div class="text3">Već imate račun?
-                <NuxtLink to="/login" id="link">Prijavite se</NuxtLink>
-            </div>
+      <div class="inputWrapper">
+        <h3 class="title">Registriraj se</h3>
+        <div
+          class="inputContainer"
+          v-for="field in fields"
+          :key="field.id">
+          <input
+            :type="field.type"
+            :id="field.id"
+            :name="field.name"
+            :required="field.required"
+            :class="['inputField', { 'input-error': errors[field.errorKey] }]"
+            :style="{ height: inputHeights[field.id] }"
+            @focus="floatLabel(field.id)"
+            @blur="resetHeight(field.id)"
+            @input="handleInput(field.id, $event)"
+            v-model="inputValues[field.id]" />
+          <label
+            :for="field.id"
+            class="label"
+            :class="{ floated: isFloated(field.id) }">
+            {{ field.label }}
+          </label>
+          <p
+            v-if="errors[field.errorKey]"
+            class="error-msg">
+            {{ errors[field.errorKey] }}
+          </p>
         </div>
+        <p
+          v-if="errors.general"
+          class="error-msg general-msg">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="#721c24"
+            class="size-6">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+          {{ errors.general }}
+        </p>
+        <button
+          type="button"
+          class="submitButton"
+          @click="registrirajSe">
+          Registriraj se
+        </button>
+        <div class="text3">
+          Već imate račun?
+          <NuxtLink
+            to="/login"
+            id="link"
+            >Prijavite se</NuxtLink
+          >
+        </div>
+      </div>
     </div>
   </div>
-    <div>
-        <Footer/>
-    </div>
+  <div>
+    <Footer />
+  </div>
 </template>
 
 <style scoped>
-#allWrapper{
+#allWrapper {
   display: flex;
   flex-direction: column;
 }
-.square{
-    background-color:#FFFFFF2E;
-    width: 450px;
-    height: 750px;
-    align-self: center;
-    justify-self: center;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
+.square {
+  background-color: #ffffff2e;
+  width: 450px;
+  height: 750px;
+  align-self: center;
+  justify-self: center;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .inputWrapper {
   display: flex;
@@ -223,35 +275,34 @@ export default{
   color: black;
   width: 100%;
   height: 50px;
-  border-radius: 10px; 
+  border-radius: 10px;
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
 }
 .title {
-    color: #FFFFFF;
-    text-align: center;
-    margin-bottom: 60px;
-    font-family: Inter;
-    font-weight: 700;
-    font-size: 29px;
-    line-height: 100%;
-    letter-spacing: 5%;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 60px;
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 29px;
+  line-height: 100%;
+  letter-spacing: 5%;
 }
 
 .label {
-    transition: all 0.3s ease;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color:#094776;
-    font-family: Inter;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 100%;
-    letter-spacing: 5%;
-    padding-top: 7px;
-
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #094776;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 5%;
+  padding-top: 7px;
 }
 .label.floated {
   top: 0px;
@@ -261,10 +312,9 @@ export default{
   font-size: 12px;
   line-height: 100%;
   letter-spacing: 5%;
-
 }
 .submitButton {
-  background-color:#D22D3A;
+  background-color: #d22d3a;
   border: none;
   border-radius: 10px;
   width: 300px;
@@ -274,17 +324,16 @@ export default{
   text-align: center;
   margin-bottom: 20px;
 }
-.text1{
+.text1 {
   font-family: Inter;
   font-weight: 400;
   font-size: 40px;
   line-height: 100%;
   letter-spacing: 5%;
   text-align: center;
-  margin-top:10px;
-
+  margin-top: 10px;
 }
-.text2{
+.text2 {
   font-family: Inter;
   font-weight: 900;
   font-size: 80px;
@@ -292,21 +341,20 @@ export default{
   letter-spacing: 5%;
   text-align: center;
   margin-bottom: 60px;
-
 }
 .text3 {
-    font-size: 10px;
-    color: white;
-    font-family: Inter;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 100%;
-    letter-spacing: 5%;
-    text-align: center;
+  font-size: 10px;
+  color: white;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 5%;
+  text-align: center;
 }
 
 #link {
-  color:white;
+  color: white;
   text-decoration: underline;
 }
 .input-error {
@@ -320,12 +368,12 @@ export default{
   margin-top: 5px;
 }
 .general-msg {
-  background-color: #f8d7da; 
-  color: #721c24;   
-  border: #721c24 2px solid;            
+  background-color: #f8d7da;
+  color: #721c24;
+  border: #721c24 2px solid;
   padding: 12px 20px;
   margin-bottom: 20px;
-  width: 300px;                
+  width: 300px;
   text-align: center;
   font-size: 16px;
   display: flex;
@@ -340,7 +388,6 @@ export default{
 .size-6 {
   width: 1.5rem;
   height: 1.5rem;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
-
 </style>
