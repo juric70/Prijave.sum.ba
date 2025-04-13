@@ -1,20 +1,36 @@
 <template>
-    <div class="workshop-card" v-for="workshop in workshops" :key="workshop.id">
-        <div class="left-section"></div>
-        <div class="right-section">
-            <p>Naziv radionice: <span>{{ workshop.name }}</span></p>
-            <p>Ime voditelja: <span>{{ workshop.instructor }}</span></p>
-            <p>Rok za prijavu: <span>{{ formatDateTime(workshop.applicationDeadline) }}</span></p>
-            <p>Datum početka: <span>{{ formatDateTime(workshop.startDate) }}</span></p>
-            <p>Datum završetka: <span>{{ formatDateTime(workshop.endDate) }}</span></p>
-            <p>Opis: <span>{{ workshop.description }}</span></p>
-            <button class="apply-button">Prijavi se</button>
-        </div>
+  <div
+    class="workshop-card"
+    v-for="workshop in workshops"
+    :key="workshop.id">
+    <div class="left-section"></div>
+    <div class="right-section">
+      <p>
+        Naziv radionice: <span>{{ workshop.name }}</span>
+      </p>
+      <p>
+        Ime voditelja: <span>{{ workshop.instructor }}</span>
+      </p>
+      <p>
+        Rok za prijavu:
+        <span>{{ formatDateTime(workshop.applicationDeadline) }}</span>
+      </p>
+      <p>
+        Datum početka: <span>{{ formatDateTime(workshop.startDate) }}</span>
+      </p>
+      <p>
+        Datum završetka: <span>{{ formatDateTime(workshop.endDate) }}</span>
+      </p>
+      <p>
+        Opis: <span>{{ workshop.description }}</span>
+      </p>
+      <button class="apply-button">Prijavi se</button>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 // import axios from 'axios';
 
 // // Fetch podaci iz baze preko API-ja
@@ -29,44 +45,50 @@ import { ref } from 'vue';
 //   }
 // };
 
-// fetchWorkshops();  
+// fetchWorkshops();
 // Mock podaci kao da dolaze iz baze
 const workshops = ref([
-    {
-        id: 1,
-        name: "Primjer neke radionice",
-        instructor: "Marko Marić",
-        applicationDeadline: "2024-10-25T16:00:00",
-        startDate: "2024-11-01T13:00:00",
-        endDate: "2024-12-01T14:00:00",
-        description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-    },
-    {
-        id: 2,
-        name: "Primjer neke radionice",
-        instructor: "Marko Marić",
-        applicationDeadline: "2024-10-25T16:00:00",
-        startDate: "2024-11-01T13:00:00",
-        endDate: "2024-12-01T14:00:00",
-        description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-    },
-    {
-        id: 3,
-        name: "Primjer neke radionice",
-        instructor: "Marko Marić",
-        applicationDeadline: "2024-10-25T16:00:00",
-        startDate: "2024-11-01T13:00:00",
-        endDate: "2024-12-01T14:00:00",
-        description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
-    },
+  {
+    id: 1,
+    name: "Primjer neke radionice",
+    instructor: "Marko Marić",
+    applicationDeadline: "2024-10-25T16:00:00",
+    startDate: "2024-11-01T13:00:00",
+    endDate: "2024-12-01T14:00:00",
+    description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`,
+  },
+  {
+    id: 2,
+    name: "Primjer neke radionice",
+    instructor: "Marko Marić",
+    applicationDeadline: "2024-10-25T16:00:00",
+    startDate: "2024-11-01T13:00:00",
+    endDate: "2024-12-01T14:00:00",
+    description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`,
+  },
+  {
+    id: 3,
+    name: "Primjer neke radionice",
+    instructor: "Marko Marić",
+    applicationDeadline: "2024-10-25T16:00:00",
+    startDate: "2024-11-01T13:00:00",
+    endDate: "2024-12-01T14:00:00",
+    description: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.`,
+  },
 ]);
 
-const formatDateTime = (dateTimeString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateTimeString).toLocaleString('hr-HR', options);
+const formatDateTime = (dateTimeString: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+  return new Date(dateTimeString).toLocaleString("hr-HR", options);
 };
 </script>
 
@@ -82,31 +104,31 @@ const formatDateTime = (dateTimeString) => {
 }
 
 .workshop-card p {
-    color: #0056b3;
-    font-size: 14px;
-    font-weight: bold;
+  color: #0056b3;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .workshop-card span {
-    margin: 4px 0;
-    font-size: 14px;
-    color: #333;
+  margin: 4px 0;
+  font-size: 14px;
+  color: #333;
 }
 
 .apply-button {
-    margin-top: 12px;
-    padding: 8px 16px;
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 85%;
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 85%;
 }
 
 .apply-button:hover {
-    background-color: #c9302c;
+  background-color: #c9302c;
 }
 
 .left-section {
@@ -119,5 +141,4 @@ const formatDateTime = (dateTimeString) => {
   width: 94%;
   padding-left: 16px;
 }
-
 </style>
