@@ -2,6 +2,7 @@
 <script>
 import axios from 'axios';
 import Tablica from './Tablica.vue';
+import * as EXCEL from 'xlsx'
 axios.defaults.withCredentials = true;
 export default {
   mounted(){
@@ -15,7 +16,8 @@ export default {
       MojiOdgovori: [],
       brojRadionice: 0,
       brojKorisnika: 0,
-      pirjac:[]
+      pirjac:[],
+      ime:""
     }
   },
 
@@ -29,7 +31,7 @@ export default {
       }catch(error){console.log(error);}
     try {
       await axios.get("http://localhost:8000/User/"+this.brojKorisnika).then(res=>{
-          
+              this.ime=res.data.name+" "+res.data.lastname;
               document.getElementById('ime').innerHTML=res.data.name+" "+res.data.lastname;
             }
           )
@@ -98,6 +100,18 @@ await axios.get("http://localhost:8000/SvaPitanja/" + this.brojRadionice).then(r
 this.error = error.response ? error.response.data : error.message;
 }
 
+    },
+    ajmouexcel(){
+      const kora=this.pirjac.map(({ pitanja,odgovor}) => ({
+        "Ime":this.ime,
+        "Pitanje": pitanja,
+        "Odgovor": odgovor,
+      }))
+      const radno = EXCEL.utils.json_to_sheet(kora)
+      const knjiga = EXCEL.utils.book_new()
+      EXCEL.utils.book_append_sheet(knjiga, radno)
+      const imeFilea = 'ajmo.xlsx'
+      EXCEL.writeFile(knjiga, imeFilea)
     },
     ispisiPitanje(pitanje){
       let pom = document.getElementById("listaPitanja");
@@ -213,6 +227,7 @@ this.error = error.response ? error.response.data : error.message;
           <h1>Upitnik</h1>
         </div>
         <Tablica :pila="pirjac"/>
+        <button @click.prevent="ajmouexcel" class="buton">Prebaci u Excel</button>
       </form>
     </div>
   </section>
@@ -222,6 +237,20 @@ this.error = error.response ? error.response.data : error.message;
 
 
 <style scoped>
+.buton{
+  background-color: #101D2F;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin:  auto;
+  margin-left: 45%;
+  border: none;
+  transition: all 0.3s ease;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+
+}
 .forma {
   height: 100%;
   width: 100%;
@@ -392,7 +421,9 @@ th{
     left: 5vw;
     font-size: 3vh;
   }
-
+.buton{
+  margin-left: 15%;
+}
   .dio2 {
     padding: 5rem;
     overflow: auto;
