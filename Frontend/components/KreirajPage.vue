@@ -494,4 +494,52 @@ input[type="text"]::placeholder {
   opacity: 1;
   cursor: pointer;
 }
+@media (max-width: 768px) {
+  #Radionica {
+    font-size: 1.8vh;
+    padding: 10px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="datetime-local"] {
+    font-size: 1rem;
+    padding: 8px;
+  }
+
+  .hero-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn-div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .novo {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .Buttoni,
+  .Buttonii,
+  .Closer {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    margin: 10px 0;
+  }
+
+  .VrstePitanja {
+    padding: 10px;
+  }
+}
 </style>

@@ -294,4 +294,47 @@ export default {
   margin-right: 8px;
   fill: #721c24; 
 }
+
+@media (max-width: 768px) {
+  .inputWrapper {
+  display: flex;
+  max-width: 70%;
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .text1 {
+    font-size: 30px;
+  }
+
+  .text2 {
+    font-size: 50px;
+    margin-bottom: 30px;
+  }
+
+  .square {
+  display: flex;
+  max-width: 80%;
+  align-items: center;
+  }
+
+  .eduButtonLeft,
+  .eduButtonRight {
+    width: 100%;
+    border-radius: 10px;
+    margin: 5px 0;
+  }
+
+  .container {
+    max-width: 60%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-message {
+    width: 100%;
+  }
+ 
+}
+
 </style>

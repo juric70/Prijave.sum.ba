@@ -126,7 +126,7 @@ export default{
                 <label for="lastnameInput" class="label" :class="{ floated: isFloated('lastname') }">Prezime</label>  
             </div>
             <div class="inputContainer">
-                <input type="text" id="birthInput" name ="birth"
+                <input type="date" id="birthInput" name ="birth"
                 required                
                 :class="{'inputField': true, 'input-error': errors.birthInput}" 
                 :style="{ height: inputHeights.birth }" @focus="floatLabel('birth')"
@@ -341,6 +341,76 @@ export default{
   width: 1.5rem;
   height: 1.5rem;
   flex-shrink: 0; 
+}
+
+input[type="date"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 3px solid white;
+  border-radius: 10px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 1;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .inputWrapper {
+  display: flex;
+  max-width: 70%;
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .label{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 1%;
+  }
+
+  .text1 {
+    font-size: 30px;
+  }
+
+  .text2 {
+    font-size: 50px;
+    margin-bottom: 30px;
+  }
+
+  .square {
+  display: flex;
+  max-width: 80%;
+  align-items: center;
+  }
+
+  .eduButtonLeft,
+  .eduButtonRight {
+    width: 100%;
+    border-radius: 10px;
+    margin: 5px 0;
+  }
+
+  .container {
+    max-width: 60%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-message {
+    width: 100%;
+  }
+  .inputField{
+    max-width: 90%;
+    margin-left: 5%;
+  }
+ 
 }
 
 </style>
