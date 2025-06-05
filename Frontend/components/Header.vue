@@ -1,47 +1,117 @@
 <template>
   <div>
     <div class="header">
-      <nuxt-link to="/"><img src="/sumit-Photoroom.png" alt="SUMIT icon" class="logo"></nuxt-link>
+      <nuxt-link to="/"
+        ><img
+          src="/sumit-Photoroom.png"
+          alt="SUMIT icon"
+          class="logo"
+      /></nuxt-link>
       <div class="navbar-end">
-        <nuxt-link to="/" id="testiramovo" class="navbar-item">Home</nuxt-link>
-        <nuxt-link to="/about" class="navbar-item">About Us</nuxt-link>
-        <nuxt-link to="/radionice" v-if="vrstaKorisnika <= 3" class="navbar-item">Prijave</nuxt-link>
+        <nuxt-link
+          to="/"
+          id="testiramovo"
+          class="navbar-item"
+          >Home</nuxt-link
+        >
+        <nuxt-link
+          to="/about"
+          class="navbar-item"
+          >About Us</nuxt-link
+        >
+        <nuxt-link
+          to="/radionice"
+          v-if="user !== null"
+          class="navbar-item"
+          >Prijave</nuxt-link
+        >
 
-        
         <!-- Trenutno ugradjena verzija za pretvaranje podataka u Excel (zasad samo smeta)
         <button @click="fetchDataAndDownload()">Download Data as CSV</button>-->
       </div>
       <div class="navbar-end">
-
-        <nuxt-link to="/korisnici" v-if="vrstaKorisnika == 1" class="navbar-item">Korisnici</nuxt-link>
-        <nuxt-link to="/kreiraj" v-if="vrstaKorisnika <= 2" class="navbar-item">Kreiraj</nuxt-link>
-        <nuxt-link to="/logout" v-if="vrstaKorisnika <= 3" class="navbar-item">Odjavi se</nuxt-link>
-        <nuxt-link to="/login" v-if="prijavaFailed" class="navbar-item">Login</nuxt-link>
-        <p v-if="vrstaKorisnika <= 3">Pozdrav, {{ nazivKorisnika }}</p>
+        <nuxt-link
+          to="/korisnici"
+          v-if="user !== null && permissionLevel(1)"
+          class="navbar-item"
+          >Korisnici</nuxt-link
+        >
+        <nuxt-link
+          to="/kreiraj"
+          v-if="user !== null && permissionLevel(2)"
+          class="navbar-item"
+          >Kreiraj</nuxt-link
+        >
+        <nuxt-link
+          to="/logout"
+          v-if="user !== null"
+          class="navbar-item"
+          >Odjavi se</nuxt-link
+        >
+        <nuxt-link
+          to="/login"
+          v-if="user === null"
+          class="navbar-item"
+          >Login</nuxt-link
+        >
+        <p v-if="user !== null">Pozdrav, {{ user.name }}</p>
       </div>
-      <div class="hamburger" @click="toggleMenu">
+      <div
+        class="hamburger"
+        @click="toggleMenu">
         <span></span>
         <span></span>
         <span></span>
       </div>
     </div>
-    <div class="mobile-menu" v-show="menuOpen">
-      <nuxt-link to="/" class="mobile-nav-item">Home</nuxt-link>
-      <nuxt-link to="/about" class="mobile-nav-item">About Us</nuxt-link>
-      <nuxt-link to="/korisnici" v-if="vrstaKorisnika == 1" class="mobile-nav-item">Korisnici</nuxt-link>
-      <nuxt-link to="/kreiraj" v-if="vrstaKorisnika <= 2" class="mobile-nav-item">Kreiraj</nuxt-link>
-      <nuxt-link to="/radionice" v-if="vrstaKorisnika <= 3" class="mobile-nav-item">Prijave</nuxt-link>
-      <nuxt-link to="/logout" v-if="vrstaKorisnika <= 3" class="mobile-nav-item">Odjavi se</nuxt-link>
-      <p v-if="vrstaKorisnika <= 3">Pozdrav, {{ nazivKorisnika }}</p>
-
+    <div
+      class="mobile-menu"
+      v-show="menuOpen">
+      <nuxt-link
+        to="/"
+        class="mobile-nav-item"
+        >Home</nuxt-link
+      >
+      <nuxt-link
+        to="/about"
+        class="mobile-nav-item"
+        >About Us</nuxt-link
+      >
+      <nuxt-link
+        to="/korisnici"
+        v-if="user !== null && permissionLevel(1)"
+        class="mobile-nav-item"
+        >Korisnici</nuxt-link
+      >
+      <nuxt-link
+        to="/kreiraj"
+        v-if="user !== null && permissionLevel(2)"
+        class="mobile-nav-item"
+        >Kreiraj</nuxt-link
+      >
+      <nuxt-link
+        to="/radionice"
+        v-if="user !== null"
+        class="mobile-nav-item"
+        >Prijave</nuxt-link
+      >
+      <nuxt-link
+        to="/logout"
+        v-if="user !== null"
+        class="mobile-nav-item"
+        >Odjavi se</nuxt-link
+      >
+      <p v-if="user !== null">Pozdrav, {{ user.name }}</p>
     </div>
   </div>
 </template>
 
+<script setup lang="ts">
+import { ref } from "vue";
+import type User from "~/lib/types/User";
+import type UserType from "~/lib/types/UserType";
+import { permissionGranted } from "~/lib/utils";
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
 const menuOpen = ref(false);
 // Define your jsonToCsv function here
 /* function jsonToCsv(jsonData) {
@@ -49,13 +119,10 @@ const keys = Object.keys(jsonData[0]);
 const csvRows = jsonData.map(row => keys.map(key => `"${row[key]}"`).join(','));
 return `${keys.join(',')} \n${csvRows.join('\n')}`;
 } */
-const vrstaKorisnika = ref(5);
-const nazivKorisnika = ref('');
-const prijavaFailed = ref(false)
 
 const testFunc = () => {
-  alert('hi!')
-}
+  alert("hi!");
+};
 
 /* async function fetchDataAndDownload() {
 const response = await fetch('http://localhost:8000/SvePrijave/10');
@@ -72,33 +139,23 @@ link.click();
 document.body.removeChild(link);
 } */
 
-const generirajHeader = async () => {
-  try{
-    let {data} = await axios.get("http://localhost:8000/api/user");
-    vrstaKorisnika.value = data.vrstaKorisnika;
-    nazivKorisnika.value = data.name;
-  }
-  catch(error){console.log(error);
-    if(error.response.status == 401){
-      prijavaFailed.value = true;
-    }
-  }
-}
+const user = useSanctumUser<User>();
 
 const toggleMenu = () => {
- 
- menuOpen.value = !menuOpen.value;
-
+  menuOpen.value = !menuOpen.value;
 };
 
-onMounted(() => {
-  generirajHeader();
-});
+const permissionLevel = (type: UserType) => {
+  if (user.value === null) {
+    return false;
+  }
+
+  return permissionGranted(user.value.vrstaKorisnika, type);
+};
 
 // Call fetchDataAndDownload when the component mounts
 //onMounted(fetchDataAndDownload);
 </script>
-
 
 <style scoped>
 * {
@@ -203,7 +260,7 @@ onMounted(() => {
   }
 }
 .Buttoni {
-  background-color: #101D2F;
+  background-color: #101d2f;
   border-radius: 8px;
   padding: 10px 20px;
   margin: 20px 20px;

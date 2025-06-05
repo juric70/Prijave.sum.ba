@@ -1,3 +1,5 @@
+import type UserType from "~/lib/types/UserType";
+
 export default interface User {
   created_at: string;
   updated_at: string;
@@ -7,5 +9,5 @@ export default interface User {
   id: number;
   name: string;
   lastname: string;
-  vrstaKorisnika: number;
+  vrstaKorisnika: UserType;
 }
