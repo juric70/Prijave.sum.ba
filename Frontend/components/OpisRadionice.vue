@@ -31,6 +31,7 @@
             </tr>
             </tbody>
           </table>
+          <button class="Buttoni" @click="ekportujuExcel">Prebaci u Excel </button>
         </div>
       </form>
     </div>
@@ -40,6 +41,7 @@
 <script>
 import axios from 'axios'
 axios.defaults.withCredentials = true
+import * as EXCEL from 'xlsx'
 
 export default {
   data() {
@@ -89,6 +91,20 @@ export default {
       }
     },
     prijaviSe() {},
+    ekportujuExcel(){
+      const kora = this.prijave.map(({ imePrezime, email, datum }) => ({
+        "Ime i prezime": imePrezime,
+        "Email": email,
+        "Datum rođenja": datum,
+      }))
+
+      const radno = EXCEL.utils.json_to_sheet(kora)
+      const knjiga = EXCEL.utils.book_new()
+      EXCEL.utils.book_append_sheet(knjiga, radno)
+      const imeFilea = 'ajmo.xlsx'
+      EXCEL.writeFile(knjiga, imeFilea)
+
+    },
     pregledajPrijavu(id) {
       navigateTo("/prijava?id=" + id)
     },
@@ -133,7 +149,7 @@ export default {
   border: 1px solid #ddd;
 }
 .Buttoni {
-  background-color: #014479;
+  background-color: #101D2F;
   border-radius: 8px;
   padding: 10px 20px;
   margin: 0 auto;

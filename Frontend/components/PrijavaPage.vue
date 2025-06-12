@@ -3,6 +3,13 @@ import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
 import type User from "~/lib/types/User";
 
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
+import axios from "axios";
+import type User from "~/lib/types/User";
+import Tablica from './Tablica.vue';
+import * as EXCEL from 'xlsx'
+
 axios.defaults.withCredentials = true;
 
 const route = useRoute();
@@ -13,6 +20,20 @@ const brojRadionice = ref(0);
 const brojKorisnika = ref(0);
 const pirjac = reactive<{ pitanja: string; odgovor: string }[]>([]);
 const error = ref<string | null>(null);
+const ime = ref("");
+
+const ajmouexcel = () =>{
+      const kora= pirjac.map(({ pitanja,odgovor}) => ({
+        "Ime": ime.value,
+        "Pitanje": pitanja,
+        "Odgovor": odgovor,
+      }))
+      const radno = EXCEL.utils.json_to_sheet(kora)
+      const knjiga = EXCEL.utils.book_new()
+      EXCEL.utils.book_append_sheet(knjiga, radno)
+      const imeFilea = 'excel.xlsx'
+      EXCEL.writeFile(knjiga, imeFilea)
+    }
 
 const getRadionica = async () => {
   try {
@@ -23,9 +44,19 @@ const getRadionica = async () => {
     brojKorisnika.value = prijavaRes.data.IdKreatora;
 
     const userElement = document.getElementById("ime");
-    if (userElement) {
-      userElement.innerHTML = `${user.name} ${user.lastname}`;
-    }
+    try{
+      const kreator = await axios.get(
+        `http://localhost:8000/User/${brojKorisnika.value}`
+      );
+      console.log(brojKorisnika.value);
+      console.log(kreator);
+      if (userElement) {
+        userElement.innerHTML = `${kreator.data.name} ${kreator.data.lastname}`;
+        ime.value = `${kreator.data.name} ${kreator.data.lastname}`;
+      }
+    }catch(error){
+        console.log(error);
+      }
 
     const radionicaRes = await axios.get(
       `http://localhost:8000/Radionica/${brojRadionice.value}`
@@ -163,13 +194,28 @@ onMounted(() => {
         <div id="prva">
           <h1>Upitnik</h1>
         </div>
-        <Tablica :pila="pirjac" />
+        <Tablica :pila="pirjac"/>
+        <button @click.prevent="ajmouexcel" class="buton">Prebaci u Excel</button>
       </form>
     </div>
   </section>
 </template>
 
 <style scoped>
+.buton{
+  background-color: #101D2F;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin:  auto;
+  margin-left: 45%;
+  border: none;
+  transition: all 0.3s ease;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+
+}
 .forma {
   height: 100%;
   width: 100%;
@@ -347,7 +393,9 @@ th {
     left: 5vw;
     font-size: 3vh;
   }
-
+.buton{
+  margin-left: 15%;
+}
   .dio2 {
     padding: 5rem;
     overflow: auto;
